@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
-@TeleOp(name = "Ultimate Goal TeleOp", group = "TeleOp")
+@TeleOp(name = "Basic TeleOp", group = "TeleOp")
 //@Disabled
 public class Basic_TeleOp extends LinearOpMode {
 
