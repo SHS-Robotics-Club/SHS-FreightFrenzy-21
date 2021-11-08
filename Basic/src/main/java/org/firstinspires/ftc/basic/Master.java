@@ -1,8 +1,7 @@
-package org.firstinspires.ftc.testing;
+package org.firstinspires.ftc.basic;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@SuppressWarnings("unused")
 public class Master {
     public void dcm(DcMotor DcHardware, DcMotor.Direction DcDirection, DcMotor.RunMode DcEncode) {
         DcHardware.setDirection(DcDirection);
