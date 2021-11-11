@@ -28,7 +28,7 @@ public class Basic_TeleOp extends LinearOpMode {
         while (opModeIsActive()) {
             //Controls
             double drive = -gamepad1.left_stick_y;
-            double turn = gamepad1.right_stick_x;
+            double turn = -gamepad1.right_stick_x;
             double leftPower = Range.clip(drive + turn, -1.0, 1.0);
             double rightPower = Range.clip(drive - turn, -1.0, 1.0);
 
