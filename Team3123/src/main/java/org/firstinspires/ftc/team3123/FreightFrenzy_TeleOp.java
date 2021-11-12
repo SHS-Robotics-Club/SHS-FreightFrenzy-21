@@ -31,17 +31,17 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 
         while (opModeIsActive()) {
             //Controls
-            double      drive           = -gamepad1.left_stick_y;
-            double      turn            = gamepad1.right_stick_x;
-            double      leftPower       = Range.clip(drive + turn, -1.0, 1.0);
-            double      rightPower      = Range.clip(drive - turn, -1.0, 1.0);
+//            double      drive           = -gamepad1.left_stick_y;
+//            double      turn            = gamepad1.right_stick_x;
+//            double      leftPower       = Range.clip(drive + turn, -1.0, 1.0);
+//            double      rightPower      = Range.clip(drive - turn, -1.0, 1.0);
             double      armSpeed        = (gamepad1.right_trigger - gamepad1.left_trigger)/2;
 
             control.basic(robot.leftDrive, robot.rightDrive, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
             //Drive
-            robot.leftDrive.setPower(leftPower);
-            robot.rightDrive.setPower(rightPower);
+//            robot.leftDrive.setPower(leftPower);
+//            robot.rightDrive.setPower(rightPower);
 
             //Arm
             if (gamepad1.left_trigger > 0) {
@@ -60,7 +60,7 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 
             //Telemetry
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-            telemetry.addData("Motors", "Left: (%.2f), Right: (%.2f)", leftPower, rightPower);
+//            telemetry.addData("Motors", "Left: (%.2f), Right: (%.2f)", control.leftPower, rightPower);
             telemetry.addData("Stuff", "Left: (%.2f), Right: (%.2f)", gamepad1.left_trigger, gamepad1.right_trigger);
             telemetry.addData("Speed", armSpeed);
             telemetry.addData("DEG", robot.arm.getCurrentPosition());
