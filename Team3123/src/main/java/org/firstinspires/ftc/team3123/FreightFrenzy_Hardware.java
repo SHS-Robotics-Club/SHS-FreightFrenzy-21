@@ -30,9 +30,7 @@ public class FreightFrenzy_Hardware {
 
         //Arm
         arm = hwMap.get(DcMotor.class, "arm");
-        master.dcm(rightDrive, DcMotorSimple.Direction.REVERSE, DcMotor.RunMode.RUN_USING_ENCODER);
-        arm.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        master.dcm(arm, DcMotorSimple.Direction.REVERSE, DcMotor.RunMode.RUN_USING_ENCODER);
     }
 }
 

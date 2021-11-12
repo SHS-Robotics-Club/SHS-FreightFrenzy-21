@@ -22,36 +22,36 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
+        double armLock = 0;
+
         //START
         waitForStart();
         runtime.reset();
 
         while (opModeIsActive()) {
             //Controls
-            double drive = -gamepad1.left_stick_y;
-            double turn = gamepad1.right_stick_x;
-            double leftPower = Range.clip(drive + turn, -1.0, 1.0);
-            double rightPower = Range.clip(drive - turn, -1.0, 1.0);
+            double      drive           = -gamepad1.left_stick_y;
+            double      turn            = gamepad1.right_stick_x;
+            double      leftPower       = Range.clip(drive + turn, -1.0, 1.0);
+            double      rightPower      = Range.clip(drive - turn, -1.0, 1.0);
+            double      armSpeed        = (gamepad1.right_trigger - gamepad1.left_trigger)/2;
 
-            double bumpers = gamepad1.right_trigger + gamepad1.left_trigger;
-            double armPOS =+ bumpers*180;
-            double armPower = armPOS;
-            int armPowerINT = (int)armPower;
-
-            //Send Power
+            //Drive
             robot.leftDrive.setPower(leftPower);
             robot.rightDrive.setPower(rightPower);
-            //robot.arm.setTargetPosition(armPowerINT);
 
-            if(bumpers < 0)
-            {
-                robot.arm.setTargetPosition(robot.arm.getCurrentPosition()-10);
-                robot.arm.setPower(bumpers);
-            } else if(bumpers > 0){
-                robot.arm.setTargetPosition(robot.arm.getCurrentPosition()+10);
-                robot.arm.setPower(bumpers);
+            //Arm
+            if (gamepad1.left_trigger > 0) {
+                robot.arm.setTargetPosition(robot.arm.getTargetPosition() - 10);
+                robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.arm.setPower(armSpeed);
+            } else if (gamepad1.right_trigger > 0) {
+                robot.arm.setTargetPosition(robot.arm.getTargetPosition() + 10);
+                robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                robot.arm.setPower(armSpeed);
             } else {
                 robot.arm.setTargetPosition(robot.arm.getCurrentPosition());
+                robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.arm.setPower(0.2);
             }
 
@@ -59,8 +59,9 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "Left: (%.2f), Right: (%.2f)", leftPower, rightPower);
             telemetry.addData("Stuff", "Left: (%.2f), Right: (%.2f)", gamepad1.left_trigger, gamepad1.right_trigger);
-            telemetry.addData("Stuff2", "Bump: (%.2f), POS: (%.2f)", bumpers, armPOS);
-            telemetry.addData("Stuff2", armPower);
+            telemetry.addData("Speed", armSpeed);
+            telemetry.addData("DEG", robot.arm.getCurrentPosition());
+            telemetry.addData("DEG", armLock);
             telemetry.update();
 
             idle();
