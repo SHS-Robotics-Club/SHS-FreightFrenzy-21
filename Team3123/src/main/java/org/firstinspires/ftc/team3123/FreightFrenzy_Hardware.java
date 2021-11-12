@@ -3,6 +3,7 @@ package org.firstinspires.ftc.team3123;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.util.Range;
 
 /**
  * Motor:   Left  Drive:    "left_drive"
@@ -16,9 +17,8 @@ public class FreightFrenzy_Hardware {
     public DcMotor arm;
 
     HardwareMap hwMap = null;
-    public void init(HardwareMap ahwMap) {
+    public void init(HardwareMap hwMap) {
         Master master = new Master();
-        hwMap = ahwMap;
 
         //Left Drive
         leftDrive = hwMap.get(DcMotor.class, "left_drive");

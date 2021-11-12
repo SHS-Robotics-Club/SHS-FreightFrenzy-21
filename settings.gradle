@@ -1,20 +1,4 @@
-//FTC default programs
-include ':FtcRobotController'
-
-//Testing and basic programs
-include ':Basic' , ':Team3123' , ':Team3736'
+rootProject.name = 'SHS FTC Code'
+include(':FtcRobotController', ':Team3123' , ':Team3736', 'library')
 
 
-/*
-Basicly ... Pain
-*/
-
-
-//Testing and basic programs
-//include ':modules:Testing' , ':modules:Basic'
-
-//Team Code
-//include ':modules:Team3123' , ':modules:Team3736'
-
-// Old code from previous years
-//include ':OLD:Team3123' , ':OLD:Team3736' , ':OLD:TESTING'

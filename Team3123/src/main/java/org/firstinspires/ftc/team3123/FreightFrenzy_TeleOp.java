@@ -6,11 +6,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.library.Robot_Control;
+
 @TeleOp(name = "Freight Frenzy TeleOp", group = "TeleOp")
 //@Disabled
 public class FreightFrenzy_TeleOp extends LinearOpMode {
 
     final FreightFrenzy_Hardware robot = new FreightFrenzy_Hardware();
+    final Robot_Control control = new Robot_Control();
     private final ElapsedTime runtime = new ElapsedTime();
 
     @Override
@@ -21,8 +24,6 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
         //Telemetry
         telemetry.addData("Status", "Initialized");
         telemetry.update();
-
-        double armLock = 0;
 
         //START
         waitForStart();
@@ -35,6 +36,8 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
             double      leftPower       = Range.clip(drive + turn, -1.0, 1.0);
             double      rightPower      = Range.clip(drive - turn, -1.0, 1.0);
             double      armSpeed        = (gamepad1.right_trigger - gamepad1.left_trigger)/2;
+
+            control.basic(robot.leftDrive, robot.rightDrive, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
             //Drive
             robot.leftDrive.setPower(leftPower);
@@ -61,7 +64,6 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
             telemetry.addData("Stuff", "Left: (%.2f), Right: (%.2f)", gamepad1.left_trigger, gamepad1.right_trigger);
             telemetry.addData("Speed", armSpeed);
             telemetry.addData("DEG", robot.arm.getCurrentPosition());
-            telemetry.addData("DEG", armLock);
             telemetry.update();
 
             idle();
