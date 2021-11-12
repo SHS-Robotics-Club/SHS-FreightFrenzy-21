@@ -2,7 +2,7 @@
 include ':FtcRobotController'
 
 //Testing and basic programs
-include ':Testing' , ':Basic' , ':Team3123' , ':Team3736'
+include ':Basic' , ':Team3123' , ':Team3736'
 
 
 /*
