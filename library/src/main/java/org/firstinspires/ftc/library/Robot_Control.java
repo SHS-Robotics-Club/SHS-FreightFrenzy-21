@@ -10,7 +10,7 @@ public class Robot_Control {
 		double      rightPower      = Range.clip((double) leftStickY - (double) rightStickX, -1.0, 1.0);
 
 		//Drive
-		leftMotor.setPower(leftPower);
-		rightMotor.setPower(rightPower);
+		leftMotor.setPower(leftPower*0.75);
+		rightMotor.setPower(rightPower*0.75);
 	}
 }
