@@ -18,5 +18,6 @@ apply from: '../build.dependencies.gradle'
 dependencies {
     implementation project(':FtcRobotController')
     implementation project(path: ':library')
+    implementation project(path: ':library')
     annotationProcessor files('lib/OpModeAnnotationProcessor.jar')
 }
