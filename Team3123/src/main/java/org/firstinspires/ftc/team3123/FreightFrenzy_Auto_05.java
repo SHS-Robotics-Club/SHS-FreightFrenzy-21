@@ -5,9 +5,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @SuppressWarnings("unused")
-@Autonomous(name="Freight Frenzy Auto : 0.3 sec", group="Auto")
+@Autonomous(name="Freight Frenzy Auto : 0.5 sec", group="Auto")
 //@Disabled
-public class FreightFrenzy_Auto_03 extends LinearOpMode {
+public class FreightFrenzy_Auto_05 extends LinearOpMode {
 
     //Declare Members
     final FreightFrenzy_Hardware robot = new FreightFrenzy_Hardware();
@@ -33,7 +33,7 @@ public class FreightFrenzy_Auto_03 extends LinearOpMode {
         robot.leftDrive.setPower(FORWARD_SPEED);
         robot.rightDrive.setPower(FORWARD_SPEED);
         runtime.reset();
-        while (opModeIsActive() && (runtime.seconds() < 0.3 )) {
+        while (opModeIsActive() && (runtime.seconds() < 0.5 )) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }

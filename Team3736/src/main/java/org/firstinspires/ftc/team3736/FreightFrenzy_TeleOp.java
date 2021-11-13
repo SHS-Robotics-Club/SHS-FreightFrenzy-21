@@ -28,7 +28,7 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
         runtime.reset();
 
         while (opModeIsActive()) {
-            control.basic(robot.leftDrive, robot.rightDrive, gamepad1.left_stick_y, gamepad1.right_stick_x);
+            control.basic(robot.leftDrive, robot.rightDrive, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.a);
 
             //Telemetry
             telemetry.addData("Status", "Run Time: " + runtime.toString());

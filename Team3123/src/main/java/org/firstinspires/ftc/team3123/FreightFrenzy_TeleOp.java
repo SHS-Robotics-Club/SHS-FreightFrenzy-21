@@ -32,26 +32,19 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
         boolean     clw            = false;
 
         while (opModeIsActive()) {
-            control.basic(robot.leftDrive, robot.rightDrive, gamepad1.left_stick_y, gamepad1.right_stick_x);
+            control.basic(robot.leftDrive, robot.rightDrive, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.a);
 
             //Arm
-            double      armSpeed        = (gamepad1.right_trigger - gamepad1.left_trigger)/4;
+            robot.arm.setPower(0.25);
 
             if (gamepad1.left_trigger > 0) {
                 robot.arm.setTargetPosition(robot.arm.getTargetPosition() - 10);
-//                robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                robot.arm.setPower(armSpeed);
             } else if (gamepad1.right_trigger > 0) {
                 robot.arm.setTargetPosition(robot.arm.getTargetPosition() + 10);
-//                robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                robot.arm.setPower(armSpeed);
             } else {
                 robot.arm.setTargetPosition(robot.arm.getCurrentPosition());
-//                robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                robot.arm.setPower(0.5);
             }
             robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            robot.arm.setPower(armSpeed);
 
             //Claw
             if (gamepad1.x  && System.currentTimeMillis() - lastx > 500) {
@@ -65,8 +58,10 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
                 robot.claw.setPower(0.125);
             }
 
+
             //Telemetry
             telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Arm Deg", robot.arm.getCurrentPosition());
             telemetry.update();
 
             idle();
