@@ -26,7 +26,7 @@ public class FreightFrenzy_Hardware {
 
         //Right Drive
         rightDrive = hwMap.get(DcMotor.class, "right_drive");
-        master.dcm(rightDrive, DcMotorSimple.Direction.FORWARD, DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        master.dcm(rightDrive, DcMotorSimple.Direction.REVERSE, DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //Arm
         arm = hwMap.get(DcMotor.class, "arm");
