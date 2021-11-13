@@ -31,6 +31,7 @@ public class FreightFrenzy_Hardware {
         //Arm
         arm = hwMap.get(DcMotor.class, "arm");
         master.dcm(arm, DcMotorSimple.Direction.REVERSE, DcMotor.RunMode.RUN_USING_ENCODER);
+        arm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 }
 

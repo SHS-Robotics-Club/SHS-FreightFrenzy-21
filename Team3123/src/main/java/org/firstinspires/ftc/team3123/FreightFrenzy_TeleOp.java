@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.library.Robot_Control;
 
@@ -52,11 +51,11 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
                 robot.arm.setTargetPosition(robot.arm.getTargetPosition() + 10);
                 robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.arm.setPower(armSpeed);
-            } else {
+            } /*else {
                 robot.arm.setTargetPosition(robot.arm.getCurrentPosition());
                 robot.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.arm.setPower(0.2);
-            }
+            }*/
 
             //Telemetry
             telemetry.addData("Status", "Run Time: " + runtime.toString());
