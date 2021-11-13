@@ -5,13 +5,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.library.Robot_Control;
-
 @TeleOp(name = "Freight Frenzy TeleOp", group = "TeleOp")
 //@Disabled
 public class FreightFrenzy_TeleOp extends LinearOpMode {
 
-    final FreightFrenzy_Hardware robot = new FreightFrenzy_Hardware();
+    final Hardware robot = new Hardware();
     final Robot_Control control = new Robot_Control();
     private final ElapsedTime runtime = new ElapsedTime();
 
@@ -32,7 +30,7 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
         boolean     clw            = false;
 
         while (opModeIsActive()) {
-            control.basic(robot.leftDrive, robot.rightDrive, gamepad1.left_stick_y, gamepad1.right_stick_x, gamepad1.a);
+            control.basic(gamepad1, robot.leftDrive, robot.rightDrive);
 
             //Arm
             robot.arm.setPower(0.25);

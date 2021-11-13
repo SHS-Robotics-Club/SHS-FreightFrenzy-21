@@ -13,7 +13,7 @@ import org.firstinspires.ftc.library.Master;
  * Motor:   Arm:            "arm"
  * Servo:   Claw:           "claw"
  */
-public class FreightFrenzy_Hardware {
+public class Hardware {
 
     public DcMotor leftDrive;
     public DcMotor rightDrive;
