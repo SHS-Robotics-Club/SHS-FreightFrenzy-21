@@ -56,7 +56,7 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 		while (opModeIsActive()) {
 			DifferentialDrive m_drive = new DifferentialDrive(leftDrive, rightDrive);
 
-				//Send power and toggle slow mode
+/*				//Send power and toggle slow mode
 				if (gp1.a  && System.currentTimeMillis() - lasta > 500) {
 					lasta = System.currentTimeMillis();
 					slowMode = !slowMode;
@@ -65,17 +65,17 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 				if (slowMode) {
 					forwardSpeed    /= 2;
 					turnSpeed       /= 2;
-				}
+				}*/
 
 			//Arm
 			robot.arm.set(0.25);
 
 			if (gamepad1.left_trigger > 0) {
-				robot.arm.setTargetPosition(robot.arm.getTargetPosition() - 10);
+				robot.arm.setPositionCoefficient(robot.arm.getPositionCoefficient() - 10);
 			} else if (gamepad1.right_trigger > 0) {
-				robot.arm.setTargetPosition(robot.arm.getTargetPosition() + 10);
+				robot.arm.setPositionCoefficient(robot.arm.getPositionCoefficient() + 10);
 			} else {
-				robot.arm.setTargetPosition(robot.arm.getCurrentPosition());
+				robot.arm.setPositionCoefficient(robot.arm.getCurrentPosition());
 			}
 
 			//Claw
