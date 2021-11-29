@@ -16,6 +16,6 @@ The Seminole High Robotics Club is located in Pinellas County Florida and consis
 
 ![Logo](https://raw.githubusercontent.com/SHS-Robotics-Club/SHS_TeamCode/main/FTC_Logo.png?token=ARI3XAFVJCVY7M3ATJUFVBLBUT7KY)
 
-In the 2021-2022 season, FIRST® FORWARDSM presented by Qualcomm, FIRST® teams will explore the future of transportation. From the shipment of packages in rural and urban areas, to disaster relief delivery and high-tech air transit, teams will re-imagine faster, more reliable, inclusive, and sustainable transportation innovations that better connect and grow communities and economies around the world.
+In the 2021-2022 season, FIRST® FORWARD presented by Qualcomm, FIRST® teams will explore the future of transportation. From the shipment of packages in rural and urban areas, to disaster relief delivery and high-tech air transit, teams will re-imagine faster, more reliable, inclusive, and sustainable transportation innovations that better connect and grow communities and economies around the world.
 
-In FREIGHT FRENZYSM presented by Raytheon Technologies, teams and their robots must navigate a complex transportation system by traversing barriers and racing against time to load and deliver essential items to those who need them most.
+In FREIGHT FRENZY presented by Raytheon Technologies, teams and their robots must navigate a complex transportation system by traversing barriers and racing against time to load and deliver essential items to those who need them most.
