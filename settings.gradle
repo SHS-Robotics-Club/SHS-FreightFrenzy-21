@@ -1,4 +1,3 @@
-rootProject.name = 'SHS FTC Code'
+rootProject.name = 'SHS_FTC_2021-22'
 include(':FtcRobotController', ':Team3123' , ':Team3736', 'library')
-
-
+include('examples')
