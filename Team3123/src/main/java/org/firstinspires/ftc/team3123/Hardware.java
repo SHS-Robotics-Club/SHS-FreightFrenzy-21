@@ -4,8 +4,6 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.library.Master;
-
 /**
  * Motor:       Left Motor:     "lM"
  * Motor:       Right Motor:    "rM"
@@ -14,29 +12,37 @@ import org.firstinspires.ftc.library.Master;
  */
 public class Hardware {
 
-    public Motor leftMotor;
-    public Motor rightMotor;
-    public Motor arm;
-    public CRServo claw;
+	public Motor leftMotor;
+	public Motor rightMotor;
+	public Motor arm;
+	public CRServo claw;
 
-    public void init(HardwareMap hwMap) {
-        Master master = new Master();
+	public void init(HardwareMap hwMap) {
 
-        //Left Drive
-        leftMotor  = new Motor(hwMap, "lM");
-        master.dcm(leftMotor, false, Motor.RunMode.RawPower);
+		//Left Drive
+		leftMotor  = new Motor(hwMap, "lM");
+		leftMotor.setInverted(false);
+		leftMotor.resetEncoder();
+		leftMotor.setRunMode(Motor.RunMode.RawPower);
+		leftMotor.set(0);
 
-        //Right Drive
-        rightMotor = new Motor(hwMap, "rM");
-        master.dcm(rightMotor, true, Motor.RunMode.RawPower);
+		//Right Drive
+		rightMotor = new Motor(hwMap, "rM");
+		rightMotor.setInverted(true);
+		rightMotor.resetEncoder();
+		rightMotor.setRunMode(Motor.RunMode.RawPower);
+		rightMotor.set(0);
 
-        //Arm
-        arm = new Motor(hwMap, "arm");
-        master.dcm(arm, false, Motor.RunMode.PositionControl);
-        arm.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+		//Arm
+		arm = new Motor(hwMap, "arm");
+		arm.setInverted(false);
+		arm.resetEncoder();
+		arm.setRunMode(Motor.RunMode.PositionControl);
+		arm.set(0);
+		arm.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
-        //Claw
-        claw = new CRServo(hwMap, "claw");
-    }
+		//Claw
+		claw = new CRServo(hwMap, "claw");
+	}
 }
 

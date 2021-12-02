@@ -33,8 +33,8 @@ public class Auto_05_Second extends LinearOpMode {
         waitForStart();
 
         //Drive forward
-        robot.leftDrive.setPower(FORWARD_SPEED);
-        robot.rightDrive.setPower(FORWARD_SPEED);
+        robot.leftMotor.set(FORWARD_SPEED);
+        robot.rightMotor.set(FORWARD_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < FORWARD_TIME )) {
             telemetry.addData("Path", "Leg 1: %2.5f S Elapsed", runtime.seconds());
