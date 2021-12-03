@@ -70,16 +70,9 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 		waitForStart();
 		time.reset();
 
-		//Read gp1 X button
-		ToggleButtonReader readX = new ToggleButtonReader(gp1, GamepadKeys.Button.X);
-
-		TriggerReader readRT = new TriggerReader(
-				gp1, GamepadKeys.Trigger.RIGHT_TRIGGER
-		);
-
-		TriggerReader readLT = new TriggerReader(
-				gp1, GamepadKeys.Trigger.RIGHT_TRIGGER
-		);
+		//Toggle Claw
+		long        lastx           = 0;
+		boolean     clw             = false;
 
 		double t = 0;
 
@@ -98,23 +91,25 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 			//Arm
 			robot.arm.set(0.25);
 
-			if (readLT.isDown()) {
+			if (gamepad1.left_trigger > 0) {
 				robot.arm.setPositionCoefficient(robot.arm.getPositionCoefficient() - 10);
 				t += 10;
-			} else if (readRT.isDown()) {
+			} else if (gamepad1.right_trigger > 0) {
 				robot.arm.setPositionCoefficient(robot.arm.getPositionCoefficient() + 10);
 				t -= 10;
 			} else {
 				robot.arm.setPositionCoefficient(robot.arm.getCurrentPosition());
 			}
-
 			//Claw
-			if (readX.getState()) {
+			if (gamepad1.x  && System.currentTimeMillis() - lastx > 500) {
+				lastx = System.currentTimeMillis();
+				clw = !clw;
+			}
+			if (clw) {
 				robot.claw.set(-0.25);
 			} else {
 				robot.claw.set(0.125);
 			}
-			readX.readValue();
 
 			//Read battery voltage to send to FTC Dash
 			double volt = Double.POSITIVE_INFINITY;
@@ -139,8 +134,7 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 			telemetry.addData("TURN", turn);
 			telemetry.addData("STRAFE", strafe);
 			telemetry.addData("t", t);
-			telemetry.addData("X", gp1.wasJustPressed(GamepadKeys.Button.X));
-			telemetry.addData("trig", gp1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
+			telemetry.addData("clw", clw);
 			dTelemetry.addData("Voltage", vt.format(volt));
 			telemetry.update();
 
