@@ -8,6 +8,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.drivebase.DifferentialDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.gamepad.KeyReader;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
@@ -70,9 +71,7 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 		time.reset();
 
 		//Read gp1 X button
-		ToggleButtonReader readX = new ToggleButtonReader(
-				gp1, GamepadKeys.Button.X
-		);
+		ToggleButtonReader readX = new ToggleButtonReader(gp1, GamepadKeys.Button.X);
 
 		TriggerReader readRT = new TriggerReader(
 				gp1, GamepadKeys.Trigger.RIGHT_TRIGGER
@@ -81,6 +80,8 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 		TriggerReader readLT = new TriggerReader(
 				gp1, GamepadKeys.Trigger.RIGHT_TRIGGER
 		);
+
+		double t = 0;
 
 		while (opModeIsActive()) {
 
@@ -99,8 +100,10 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 
 			if (readLT.isDown()) {
 				robot.arm.setPositionCoefficient(robot.arm.getPositionCoefficient() - 10);
+				t += 10;
 			} else if (readRT.isDown()) {
 				robot.arm.setPositionCoefficient(robot.arm.getPositionCoefficient() + 10);
+				t -= 10;
 			} else {
 				robot.arm.setPositionCoefficient(robot.arm.getCurrentPosition());
 			}
@@ -134,6 +137,10 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 			telemetry.addData("Arm Deg", robot.arm.getCurrentPosition());
 			telemetry.addData("DRIVE", drive);
 			telemetry.addData("TURN", turn);
+			telemetry.addData("STRAFE", strafe);
+			telemetry.addData("t", t);
+			telemetry.addData("X", gp1.wasJustPressed(GamepadKeys.Button.X));
+			telemetry.addData("trig", gp1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER));
 			dTelemetry.addData("Voltage", vt.format(volt));
 			telemetry.update();
 

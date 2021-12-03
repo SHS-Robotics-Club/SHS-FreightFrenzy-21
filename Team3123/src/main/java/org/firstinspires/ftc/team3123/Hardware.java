@@ -27,7 +27,7 @@ public class Hardware {
 
 		//Right Drive
 		rightMotor = new Motor(hwMap, "rM");
-		rightMotor.setInverted(false);
+		rightMotor.setInverted(true);
 		rightMotor.resetEncoder();
 		rightMotor.setRunMode(Motor.RunMode.RawPower);
 		rightMotor.set(0);
