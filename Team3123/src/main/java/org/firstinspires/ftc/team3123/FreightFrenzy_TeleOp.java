@@ -32,6 +32,10 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 
 	public static double 	ARM_COEFFICIANT 	= 0.05;
 	public static double 	ARM_TOLERANCE 		= 10;
+	public static int 		ARM_INCREMENT 		= 50;
+
+	public static double 	CLAW_CLOSED 		= 0.125;
+	public static double 	CLAW_OPEN			= -0.25;
 
 	//Round
 	private static final DecimalFormat vt = new DecimalFormat("0.00");
@@ -74,8 +78,6 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 		long        lastx           = 0;
 		boolean     clw             = false;
 
-		double t = 0;
-
 		while (opModeIsActive()) {
 
 			//Set the drive mode and controls
@@ -90,15 +92,15 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 
 			//Arm
 			robot.arm.set(0.25);
+			robot.arm.setPositionCoefficient(ARM_COEFFICIANT);
+			robot.arm.setPositionTolerance(ARM_TOLERANCE);
 
-			if (gamepad1.left_trigger > 0) {
-				robot.arm.setPositionCoefficient(robot.arm.getPositionCoefficient() - 10);
-				t += 10;
-			} else if (gamepad1.right_trigger > 0) {
-				robot.arm.setPositionCoefficient(robot.arm.getPositionCoefficient() + 10);
-				t -= 10;
+			if (gp1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0) {
+				robot.arm.setTargetPosition(robot.arm.getCurrentPosition() + ARM_INCREMENT);
+			} else if (gp1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0) {
+				robot.arm.setTargetPosition(robot.arm.getCurrentPosition() - ARM_INCREMENT);
 			} else {
-				robot.arm.setPositionCoefficient(robot.arm.getCurrentPosition());
+				robot.arm.setTargetPosition(robot.arm.getCurrentPosition());
 			}
 			//Claw
 			if (gamepad1.x  && System.currentTimeMillis() - lastx > 500) {
@@ -106,9 +108,9 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 				clw = !clw;
 			}
 			if (clw) {
-				robot.claw.set(-0.25);
+				robot.claw.set(CLAW_OPEN);
 			} else {
-				robot.claw.set(0.125);
+				robot.claw.set(CLAW_CLOSED);
 			}
 
 			//Read battery voltage to send to FTC Dash
@@ -130,11 +132,6 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 			//Telemetry
 			telemetry.addData("!Status", "Run Time: " + tm.format(t2)+ ":" + tm.format(t3) + ":" + tm.format(t1));
 			telemetry.addData("Arm Deg", robot.arm.getCurrentPosition());
-			telemetry.addData("DRIVE", drive);
-			telemetry.addData("TURN", turn);
-			telemetry.addData("STRAFE", strafe);
-			telemetry.addData("t", t);
-			telemetry.addData("clw", clw);
 			dTelemetry.addData("Voltage", vt.format(volt));
 			telemetry.update();
 
