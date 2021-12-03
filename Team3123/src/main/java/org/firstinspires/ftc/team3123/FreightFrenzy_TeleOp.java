@@ -7,6 +7,9 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.drivebase.DifferentialDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
+import com.arcrobotics.ftclib.gamepad.TriggerReader;
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -26,6 +29,9 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 	public static double 	DRIVE_SPEED 	= 1;
 	public static double 	TURN_SPEED 		= 1;
 
+	public static double 	ARM_COEFFICIANT 	= 0.05;
+	public static double 	ARM_TOLERANCE 		= 10;
+
 	//Round
 	private static final DecimalFormat vt = new DecimalFormat("0.00");
 	private static final DecimalFormat tm = new DecimalFormat("00");
@@ -39,6 +45,10 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 	@Override
 	public void runOpMode() {
 
+		//Set Gamepads
+		GamepadEx gp1 = new GamepadEx(gamepad1);
+		GamepadEx gp2 = new GamepadEx(gamepad2);
+		
 		//Give Hardware HM
 		robot.init(hardwareMap);
 
@@ -59,47 +69,51 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 		waitForStart();
 		time.reset();
 
-		//Toggle Claw
-		long        lastx           = 0;
-		boolean     clw             = false;
+		//Read gp1 X button
+		ToggleButtonReader readX = new ToggleButtonReader(
+				gp1, GamepadKeys.Button.X
+		);
 
-		if (isStopRequested()) return;
+		TriggerReader readRT = new TriggerReader(
+				gp1, GamepadKeys.Trigger.RIGHT_TRIGGER
+		);
+
+		TriggerReader readLT = new TriggerReader(
+				gp1, GamepadKeys.Trigger.RIGHT_TRIGGER
+		);
 
 		while (opModeIsActive()) {
 
 			//Set the drive mode and controls
-			GamepadEx driverOp = new GamepadEx(gamepad1);
-
 			DifferentialDrive difDrive = new DifferentialDrive(leftDrive, rightDrive);
 
-			double drive = -driverOp.getLeftY()*DRIVE_SPEED;
-			double turn  = driverOp.getRightX()*TURN_SPEED;
+			double drive 	= -gp1.getLeftY()*DRIVE_SPEED;
+			double turn 	= gp1.getRightX()*TURN_SPEED;
+			double strafe	= gp1.getLeftX()*DRIVE_SPEED;
 
 			difDrive.arcadeDrive(drive, turn);
+			robot.hDrive.set(strafe);
 
 			//Arm
 			robot.arm.set(0.25);
 
-			if (gamepad1.left_trigger > 0) {
+			if (readLT.isDown()) {
 				robot.arm.setPositionCoefficient(robot.arm.getPositionCoefficient() - 10);
-			} else if (gamepad1.right_trigger > 0) {
+			} else if (readRT.isDown()) {
 				robot.arm.setPositionCoefficient(robot.arm.getPositionCoefficient() + 10);
 			} else {
 				robot.arm.setPositionCoefficient(robot.arm.getCurrentPosition());
 			}
 
 			//Claw
-			if (gamepad1.x  && System.currentTimeMillis() - lastx > 500) {
-				lastx = System.currentTimeMillis();
-				clw = !clw;
-			}
-
-			if (clw) {
+			if (readX.getState()) {
 				robot.claw.set(-0.25);
 			} else {
 				robot.claw.set(0.125);
 			}
+			readX.readValue();
 
+			//Read battery voltage to send to FTC Dash
 			double volt = Double.POSITIVE_INFINITY;
 			for (VoltageSensor sensor : hardwareMap.voltageSensor) {
 				double voltage = sensor.getVoltage();
@@ -108,7 +122,7 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 				}
 			}
 
-			//Calculate Run-Time for some reason
+			//Calculate Run-Time for some reason in H:M:S
 			long seconds = round(time.time());
 			long t1 = seconds % 60;
 			long t2 = seconds / 60;
