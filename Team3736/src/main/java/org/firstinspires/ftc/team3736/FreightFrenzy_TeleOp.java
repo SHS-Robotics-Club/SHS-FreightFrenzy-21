@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.team3123;
+package org.firstinspires.ftc.team3736;
 
 import static java.lang.Math.round;
 
@@ -59,10 +59,6 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 		waitForStart();
 		time.reset();
 
-		//Toggle Claw
-		long        lastx           = 0;
-		boolean     clw             = false;
-
 		if (isStopRequested()) return;
 
 		while (opModeIsActive()) {
@@ -76,29 +72,6 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 			double turn  = driverOp.getRightX()*TURN_SPEED;
 
 			difDrive.arcadeDrive(drive, turn);
-
-			//Arm
-			robot.arm.set(0.25);
-
-			if (gamepad1.left_trigger > 0) {
-				robot.arm.setPositionCoefficient(robot.arm.getPositionCoefficient() - 10);
-			} else if (gamepad1.right_trigger > 0) {
-				robot.arm.setPositionCoefficient(robot.arm.getPositionCoefficient() + 10);
-			} else {
-				robot.arm.setPositionCoefficient(robot.arm.getCurrentPosition());
-			}
-
-			//Claw
-			if (gamepad1.x  && System.currentTimeMillis() - lastx > 500) {
-				lastx = System.currentTimeMillis();
-				clw = !clw;
-			}
-
-			if (clw) {
-				robot.claw.set(-0.25);
-			} else {
-				robot.claw.set(0.125);
-			}
 
 			double volt = Double.POSITIVE_INFINITY;
 			for (VoltageSensor sensor : hardwareMap.voltageSensor) {
@@ -117,7 +90,6 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 
 			//Telemetry
 			telemetry.addData("!Status", "Run Time: " + tm.format(t2)+ ":" + tm.format(t3) + ":" + tm.format(t1));
-			telemetry.addData("Arm Deg", robot.arm.getCurrentPosition());
 			telemetry.addData("DRIVE", drive);
 			telemetry.addData("TURN", turn);
 			dTelemetry.addData("Voltage", vt.format(volt));
