@@ -27,15 +27,12 @@ import java.text.DecimalFormat;
 @Config
 public class FreightFrenzy_TeleOp extends LinearOpMode {
 	//Config
-	public static double 	DRIVE_SPEED 	= 1;
-	public static double 	TURN_SPEED 		= 1;
-
 	public static double 	ARM_COEFFICIANT 	= 0.05;
 	public static double 	ARM_TOLERANCE 		= 10;
-	public static int 		ARM_INCREMENT 		= 50;
+	public static int 		ARM_INCREMENT 		= 30;
 
-	public static double 	CLAW_CLOSED 		= 0.125;
-	public static double 	CLAW_OPEN			= -0.25;
+	public static double 	CLAW_CLOSED 		= -0.25;
+	public static double 	CLAW_OPEN			= 0.125;
 
 	//Round
 	private static final DecimalFormat vt = new DecimalFormat("0.00");
@@ -78,17 +75,35 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 		long        lastx           = 0;
 		boolean     clw             = false;
 
+		long        lasta           = 0;
+		boolean     slow             = false;
+
+		double 	DRIVE_SPEED 	= 0;
+		double 	TURN_SPEED 		= 0;
+
 		while (opModeIsActive()) {
+
+			if (gp1.getButton(GamepadKeys.Button.A)  && System.currentTimeMillis() - lasta > 500) {
+				lasta = System.currentTimeMillis();
+				slow = !slow;
+			}
+			if (slow) {
+				DRIVE_SPEED 	= 0.5;
+				TURN_SPEED 		= 0.4;
+			} else {
+				DRIVE_SPEED 	= 0.9;
+				TURN_SPEED 		= 0.6;
+			}
 
 			//Set the drive mode and controls
 			DifferentialDrive difDrive = new DifferentialDrive(leftDrive, rightDrive);
 
-			double drive 	= -gp1.getLeftY()*DRIVE_SPEED;
+			double drive 	= gp1.getLeftY()*DRIVE_SPEED;
 			double turn 	= gp1.getRightX()*TURN_SPEED;
-			double strafe	= gp1.getLeftX()*DRIVE_SPEED;
+			double strafe	= -gp1.getLeftX()*DRIVE_SPEED;
 
 			difDrive.arcadeDrive(drive, turn);
-			robot.hDrive.set(strafe);
+			robot.hDrive.set(Range.clip(strafe,-1,1));
 
 			//Arm
 			robot.arm.set(0.25);
@@ -96,11 +111,11 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 			robot.arm.setPositionTolerance(ARM_TOLERANCE);
 
 			if (gp1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0) {
-				robot.arm.setTargetPosition(robot.arm.getCurrentPosition() + ARM_INCREMENT);
-			} else if (gp1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0) {
 				robot.arm.setTargetPosition(robot.arm.getCurrentPosition() - ARM_INCREMENT);
+			} else if (gp1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0) {
+				robot.arm.setTargetPosition(robot.arm.getCurrentPosition() + ARM_INCREMENT);
 			} else {
-				robot.arm.setTargetPosition(robot.arm.getCurrentPosition());
+				robot.arm.stopMotor();
 			}
 			//Claw
 			if (gamepad1.x  && System.currentTimeMillis() - lastx > 500) {
@@ -108,9 +123,9 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 				clw = !clw;
 			}
 			if (clw) {
-				robot.claw.set(CLAW_OPEN);
-			} else {
 				robot.claw.set(CLAW_CLOSED);
+			} else {
+				robot.claw.set(CLAW_OPEN);
 			}
 
 			//Read battery voltage to send to FTC Dash
@@ -132,6 +147,7 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 			//Telemetry
 			telemetry.addData("!Status", "Run Time: " + tm.format(t2)+ ":" + tm.format(t3) + ":" + tm.format(t1));
 			telemetry.addData("Arm Deg", robot.arm.getCurrentPosition());
+			telemetry.addData("Slow", slow);
 			dTelemetry.addData("Voltage", vt.format(volt));
 			telemetry.update();
 

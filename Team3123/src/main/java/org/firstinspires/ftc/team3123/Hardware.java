@@ -2,6 +2,7 @@ package org.firstinspires.ftc.team3123;
 
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
+import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
@@ -20,14 +21,14 @@ public class Hardware {
 
 		//Left Drive
 		leftMotor  = new Motor(hwMap, "lM");
-		leftMotor.setInverted(true);
+		leftMotor.setInverted(false);
 		leftMotor.resetEncoder();
 		leftMotor.setRunMode(Motor.RunMode.RawPower);
 		leftMotor.set(0);
 
 		//Right Drive
 		rightMotor = new Motor(hwMap, "rM");
-		rightMotor.setInverted(true);
+		rightMotor.setInverted(false);
 		rightMotor.resetEncoder();
 		rightMotor.setRunMode(Motor.RunMode.RawPower);
 		rightMotor.set(0);
@@ -49,6 +50,10 @@ public class Hardware {
 
 		//Claw
 		claw = new CRServo(hwMap, "claw");
+
+		//Group the motors
+		MotorGroup leftDrive = new MotorGroup(leftMotor);
+		MotorGroup rightDrive = new MotorGroup(rightMotor);
 	}
 }
 
