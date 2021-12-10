@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.team3123.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -8,7 +9,7 @@ import org.firstinspires.ftc.team3123.Hardware;
 
 @SuppressWarnings("unused")
 @Autonomous(name="Freight Frenzy Auto : 0.5 sec", group="Auto")
-//@Disabled
+@Disabled
 public class Auto_05_Second extends LinearOpMode {
 
     //Declare Members
@@ -33,7 +34,7 @@ public class Auto_05_Second extends LinearOpMode {
         waitForStart();
 
         //Drive forward
-        robot.leftMotor.set(FORWARD_SPEED);
+        robot.leftMotor.set(-FORWARD_SPEED);
         robot.rightMotor.set(FORWARD_SPEED);
         runtime.reset();
         while (opModeIsActive() && (runtime.seconds() < FORWARD_TIME )) {
