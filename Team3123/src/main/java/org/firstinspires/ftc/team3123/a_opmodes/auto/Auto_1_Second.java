@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.team3123.b_hardware.Hardware;
 
 @SuppressWarnings("unused")
-@Autonomous(name="Freight Frenzy Auto : 1 sec", group="Auto")
+@Autonomous(name="FF Auto: 1 sec", group="Auto")
 //@Disabled
 public class Auto_1_Second extends LinearOpMode {
 
