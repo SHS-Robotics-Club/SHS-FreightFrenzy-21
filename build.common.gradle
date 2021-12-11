@@ -6,15 +6,6 @@ android {
 
     compileSdkVersion 29
 
-    signingConfigs {
-        debug {
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
-            storeFile rootProject.file('libs/ftc.debug.keystore')
-            storePassword 'android'
-        }
-    }
-
     aaptOptions {
         noCompress "tflite"
     }
@@ -22,7 +13,7 @@ android {
     defaultConfig {
         applicationId 'com.qualcomm.ftcrobotcontroller'
         minSdkVersion 24
-        targetSdkVersion 29
+        targetSdkVersion 28
         multiDexEnabled true
 
         def manifestFile = project(':FtcRobotController').file('src/main/AndroidManifest.xml')
@@ -68,6 +59,5 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
 
 }
