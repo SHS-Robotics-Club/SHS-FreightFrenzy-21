@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.team3123;
+package org.firstinspires.ftc.team3123.b_hardware;
 
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
@@ -27,7 +27,7 @@ public class Hardware {
 		leftMotor.set(0);
 
 		//Right Drive
-		rightMotor = new d(hwMap, "rM");
+		rightMotor = new Motor(hwMap, "rM");
 		rightMotor.setInverted(false);
 		rightMotor.resetEncoder();
 		rightMotor.setRunMode(Motor.RunMode.RawPower);

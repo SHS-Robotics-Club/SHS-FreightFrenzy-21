@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.team3123.auto;
+package org.firstinspires.ftc.team3123.a_opmodes.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.team3123.Hardware;
+import org.firstinspires.ftc.team3123.b_hardware.Hardware;
 
 @SuppressWarnings("unused")
 @Autonomous(name="Freight Frenzy Auto : 0.5 sec", group="Auto")

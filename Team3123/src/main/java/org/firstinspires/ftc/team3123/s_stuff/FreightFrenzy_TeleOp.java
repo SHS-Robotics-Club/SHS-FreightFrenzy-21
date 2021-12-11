@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.team3123;
+package org.firstinspires.ftc.team3123.s_stuff;
 
 import static java.lang.Math.round;
 
@@ -12,9 +12,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.team3123.b_hardware.Hardware;
 
 import java.text.DecimalFormat;
 
