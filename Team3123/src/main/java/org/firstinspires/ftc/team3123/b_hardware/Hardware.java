@@ -1,7 +1,11 @@
 package org.firstinspires.ftc.team3123.b_hardware;
 
-import com.arcrobotics.ftclib.hardware.motors.Motor;
+import static org.firstinspires.ftc.team3123.b_hardware.DriveConstants.MOTOR_VELO_PID;
+
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.arcrobotics.ftclib.hardware.motors.MotorEx;
+import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 /**
@@ -12,26 +16,26 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  */
 public class Hardware {
 
-	public Motor leftMotor;
-	public Motor rightMotor;
+	public MotorEx leftMotor, rightMotor;
+	public MotorGroup motors, leftMotors, rightMotors;
+
 	public Motor arm;
 	public CRServo claw;
 
-	public void init(HardwareMap hwMap) {
+	public Hardware(HardwareMap hwMap) {
 
-		//Left Drive
-		leftMotor  = new Motor(hwMap, "lM");
-		leftMotor.setInverted(true);
-		leftMotor.resetEncoder();
-		leftMotor.setRunMode(Motor.RunMode.RawPower);
-		leftMotor.set(0);
+		leftMotor  = new MotorEx(hwMap, "lM");
+		rightMotor = new MotorEx(hwMap, "rM");
 
-		//Right Drive
-		rightMotor = new Motor(hwMap, "rM");
-		rightMotor.setInverted(false);
-		rightMotor.resetEncoder();
-		rightMotor.setRunMode(Motor.RunMode.RawPower);
-		rightMotor.set(0);
+		leftMotors = new MotorGroup(leftMotor);
+		rightMotors = new MotorGroup(rightMotor);
+		motors = new MotorGroup(leftMotors, rightMotors);
+
+		motors.resetEncoder();
+		motors.setRunMode(MotorEx.RunMode.VelocityControl);
+		motors.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+		motors.setVeloCoefficients(MOTOR_VELO_PID.p, MOTOR_VELO_PID.i, MOTOR_VELO_PID.d);
+
 
 		//Arm
 		arm = new Motor(hwMap, "arm");
@@ -45,4 +49,28 @@ public class Hardware {
 		claw = new CRServo(hwMap, "claw");
 	}
 }
+/*
+				//Left Drive
+				leftMotor  = new MotorEx(hwMap, "lM");
+				leftMotor.setInverted(true);
+				leftMotor.resetEncoder();
+				leftMotor.setRunMode(Motor.RunMode.RawPower);
+				leftMotor.set(0);
 
+				//Right Drive
+				rightMotor = new MotorEx(hwMap, "rM");
+				rightMotor.setInverted(false);
+				rightMotor.resetEncoder();
+				rightMotor.setRunMode(Motor.RunMode.RawPower);
+				rightMotor.set(0);
+
+				//Arm
+				arm = new Motor(hwMap, "arm");
+				arm.setInverted(false);
+				arm.resetEncoder();
+				arm.setRunMode(Motor.RunMode.PositionControl);
+				arm.set(0);
+				arm.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+
+				//Claw
+				claw = new CRServo(hwMap, "claw");*/

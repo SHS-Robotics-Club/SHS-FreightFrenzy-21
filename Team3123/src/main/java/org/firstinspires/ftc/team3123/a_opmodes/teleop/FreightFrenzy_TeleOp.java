@@ -7,6 +7,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.drivebase.DifferentialDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -14,6 +15,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.team3123.b_hardware.RRHardware;
 import org.firstinspires.ftc.team3123.b_hardware.Hardware;
 
 import java.text.DecimalFormat;
@@ -31,20 +33,13 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 	private static final DecimalFormat tm = new DecimalFormat("00");
 
 	//Get Hardware
-	final Hardware robot = new Hardware();
+	final Hardware robot = new Hardware(hardwareMap);
 
 	//Set Time
 	ElapsedTime time = new ElapsedTime();
 
 	@Override
 	public void runOpMode() {
-
-		//Give Hardware HM
-		robot.init(hardwareMap);
-
-		//Group the motors
-		MotorGroup leftDrive = new MotorGroup(robot.leftMotor);
-		MotorGroup rightDrive = new MotorGroup(robot.rightMotor);
 
 		//FTC Dash Telemetry
 		FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -70,7 +65,7 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 			//Set the drive mode and controls
 			GamepadEx driverOp = new GamepadEx(gamepad1);
 
-			DifferentialDrive difDrive = new DifferentialDrive(leftDrive, rightDrive);
+			DifferentialDrive difDrive = new DifferentialDrive(robot.leftMotors, robot.rightMotors);
 
 			double drive = -driverOp.getLeftY()*DRIVE_SPEED;
 			double turn  = driverOp.getRightX()*TURN_SPEED;
