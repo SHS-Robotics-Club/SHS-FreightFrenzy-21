@@ -69,14 +69,5 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    sourceSets.main {
-        jni.srcDirs = []
-        jniLibs.srcDir rootProject.file('libs')
-    }
-}
 
-repositories {
-    flatDir {
-        dirs rootProject.file('libs')
-    }
 }
