@@ -2,7 +2,6 @@
 [![FTCLib](https://img.shields.io/badge/FTCLib-v1.2.1-lightgrey)](https://github.com/FTCLib/FTCLib)
 [![ftc-dashboard](https://img.shields.io/badge/ftc--dashboard-0.4.3-lightgrey)](https://github.com/acmerobotics/ftc-dashboard)
 [![EasyOpenCV](https://img.shields.io/badge/EasyOpenCV-v1.5.1-lightgrey)](https://github.com/OpenFTC/EasyOpenCV)
-FTC Dashboard is a web app for monitoring FTC robots during operation with the following features:
 
 # Seminole High School Robotics Club
 Check out our [online documentation](https://acmerobotics.github.io/ftc-dashboard).
