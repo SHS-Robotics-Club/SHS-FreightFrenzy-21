@@ -1,2 +1,0 @@
-rootProject.name = 'SHS_FTC_2021-22'
-include(':FtcRobotController', ':Team3123' , ':Team3736')
