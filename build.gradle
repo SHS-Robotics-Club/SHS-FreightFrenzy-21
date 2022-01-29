@@ -1,0 +1,32 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+configurations {
+    doc { transitive false }
+}
+
+buildscript {
+
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.0.1'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        mavenCentral()
+    }
+}
+
+dependencies {
+    doc 'org.firstinspires.ftc:Hardware:7.0.0'
+    doc 'org.firstinspires.ftc:RobotCore:7.0.0'
+    doc 'org.firstinspires.ftc:FtcCommon:7.0.0'
+    doc 'org.firstinspires.ftc:OnBotJava:7.0.0'
+    doc 'org.firstinspires.ftc:Inspection:7.0.0'
+}
