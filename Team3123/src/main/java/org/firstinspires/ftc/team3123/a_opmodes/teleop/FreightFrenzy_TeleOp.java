@@ -7,6 +7,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.drivebase.DifferentialDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -25,21 +26,28 @@ import java.text.DecimalFormat;
 @Config
 public class FreightFrenzy_TeleOp extends LinearOpMode {
 	//Config
+	public static double 	ARM_COEFFICIANT 	= 0.05;
+	public static double 	ARM_TOLERANCE 		= 10;
+	public static int 		ARM_INCREMENT 		= 100;
+
 	public static double 	DRIVE_SPEED 	= 1;
 	public static double 	TURN_SPEED 		= 1;
+
+	public static double 	CLAW_OPEN 		= 0.25;
+	public static double 	CLAW_CLOSE 		= -0.2;
 
 	//Round
 	private static final DecimalFormat vt = new DecimalFormat("0.00");
 	private static final DecimalFormat tm = new DecimalFormat("00");
-
-	//Get Hardware
-	final Hardware robot = new Hardware(hardwareMap);
 
 	//Set Time
 	ElapsedTime time = new ElapsedTime();
 
 	@Override
 	public void runOpMode() {
+
+		//Get Hardware
+		final Hardware robot = new Hardware(hardwareMap);
 
 		//FTC Dash Telemetry
 		FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -63,36 +71,47 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 		while (opModeIsActive()) {
 
 			//Set the drive mode and controls
-			GamepadEx driverOp = new GamepadEx(gamepad1);
+			GamepadEx gp1 = new GamepadEx(gamepad1);
 
 			DifferentialDrive difDrive = new DifferentialDrive(robot.leftMotors, robot.rightMotors);
 
-			double drive = -driverOp.getLeftY()*DRIVE_SPEED;
-			double turn  = driverOp.getRightX()*TURN_SPEED;
+			double drive = gp1.getLeftY()*DRIVE_SPEED;
+			double turn  = gp1.getRightX()*TURN_SPEED;
 
 			difDrive.arcadeDrive(drive, turn);
 
 			//Arm
-			robot.arm.set(0.25);
+			robot.arm.set(0.15);
+			robot.arm.setPositionCoefficient(ARM_COEFFICIANT);
+			robot.arm.setPositionTolerance(ARM_TOLERANCE);
 
-			if (gamepad1.left_trigger > 0) {
-				robot.arm.setPositionCoefficient(robot.arm.getPositionCoefficient() - 10);
-			} else if (gamepad1.right_trigger > 0) {
-				robot.arm.setPositionCoefficient(robot.arm.getPositionCoefficient() + 10);
+			if (gp1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0) {
+				robot.arm.setTargetPosition(robot.arm.getCurrentPosition() - ARM_INCREMENT);
+			} else if (gp1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0) {
+				robot.arm.setTargetPosition(robot.arm.getCurrentPosition() + ARM_INCREMENT);
 			} else {
-				robot.arm.setPositionCoefficient(robot.arm.getCurrentPosition());
+				robot.arm.setTargetPosition(robot.arm.getCurrentPosition());
 			}
 
 			//Claw
-			if (gamepad1.x  && System.currentTimeMillis() - lastx > 500) {
+			if (gp1.getButton(GamepadKeys.Button.X)  && System.currentTimeMillis() - lastx > 500) {
 				lastx = System.currentTimeMillis();
 				clw = !clw;
 			}
 
 			if (clw) {
-				robot.claw.set(-0.25);
+				robot.claw.set(CLAW_OPEN);
 			} else {
-				robot.claw.set(0.125);
+				robot.claw.set(CLAW_CLOSE);
+			}
+
+			//Duck Spiner
+			if (gp1.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
+				robot.duckSpin.set(1);
+			} else if (gp1.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
+				robot.duckSpin.set(-1);
+			} else {
+				robot.duckSpin.set(0);
 			}
 
 			double volt = Double.POSITIVE_INFINITY;
