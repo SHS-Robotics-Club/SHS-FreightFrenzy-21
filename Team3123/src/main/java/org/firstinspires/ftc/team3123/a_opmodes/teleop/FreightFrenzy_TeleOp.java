@@ -105,7 +105,7 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 				robot.claw.set(CLAW_CLOSE);
 			}
 
-			//Duck Spiner
+			//Duck Spinner
 			if (gp1.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
 				robot.duckSpin.set(1);
 			} else if (gp1.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
