@@ -36,14 +36,12 @@ public class Hardware {
 
 		//Drive Motor Settings
 		leftMotor.resetEncoder();
-		leftMotor.setRunMode(MotorEx.RunMode.VelocityControl);
+		leftMotor.setRunMode(MotorEx.RunMode.RawPower);
 		leftMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-		leftMotor.setVeloCoefficients(MOTOR_VELO_PID.p, MOTOR_VELO_PID.i, MOTOR_VELO_PID.d);
 
 		rightMotor.resetEncoder();
-		rightMotor.setRunMode(MotorEx.RunMode.VelocityControl);
+		rightMotor.setRunMode(MotorEx.RunMode.RawPower);
 		rightMotor.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-		rightMotor.setVeloCoefficients(MOTOR_VELO_PID.p, MOTOR_VELO_PID.i, MOTOR_VELO_PID.d);
 
 		//ARM---------------------------------------------------------------------------------------
 		arm = new Motor(hwMap, "arm");
