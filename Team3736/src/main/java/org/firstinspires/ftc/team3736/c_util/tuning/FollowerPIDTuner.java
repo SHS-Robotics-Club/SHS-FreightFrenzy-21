@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.team3123.s_stuff.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.team3123.s_stuff.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.team3736.c_util.sample.SampleMecanumDrive;
+import org.firstinspires.ftc.team3736.c_util.trajectorysequence.TrajectorySequence;
 
 /*
  * Op mode for preliminary tuning of the follower PID coefficients (located in the drive base

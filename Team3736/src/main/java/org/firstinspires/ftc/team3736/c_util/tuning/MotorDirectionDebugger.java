@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.team3123.s_stuff.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.team3736.c_util.sample.SampleMecanumDrive;
 
 /**
  * This is a simple teleop routine for debugging your motor configuration.

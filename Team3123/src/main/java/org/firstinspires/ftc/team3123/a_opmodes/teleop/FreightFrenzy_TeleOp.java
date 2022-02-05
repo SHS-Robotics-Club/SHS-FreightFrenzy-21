@@ -8,15 +8,12 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.drivebase.DifferentialDrive;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
-import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.team3123.b_hardware.RRHardware;
 import org.firstinspires.ftc.team3123.b_hardware.Hardware;
 
 import java.text.DecimalFormat;
@@ -26,7 +23,7 @@ import java.text.DecimalFormat;
 @Config
 public class FreightFrenzy_TeleOp extends LinearOpMode {
 	//Config
-	public static double 	ARM_COEFFICIANT 	= 0.05;
+	public static double    ARM_COEFFICIENT     = 0.05;
 	public static double 	ARM_TOLERANCE 		= 10;
 	public static int 		ARM_INCREMENT 		= 100;
 
@@ -82,7 +79,7 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 
 			//Arm
 			robot.arm.set(0.15);
-			robot.arm.setPositionCoefficient(ARM_COEFFICIANT);
+			robot.arm.setPositionCoefficient(ARM_COEFFICIENT);
 			robot.arm.setPositionTolerance(ARM_TOLERANCE);
 
 			if (gp1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0) {

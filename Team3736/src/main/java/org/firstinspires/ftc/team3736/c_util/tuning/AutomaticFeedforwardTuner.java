@@ -1,8 +1,8 @@
 package org.firstinspires.ftc.team3736.c_util.tuning;
 
-import static org.firstinspires.ftc.team3123.b_hardware.DriveConstants.MAX_RPM;
-import static org.firstinspires.ftc.team3123.b_hardware.DriveConstants.RUN_USING_ENCODER;
-import static org.firstinspires.ftc.team3123.b_hardware.DriveConstants.rpmToVelocity;
+import static org.firstinspires.ftc.team3736.b_hardware.DriveConstants.MAX_RPM;
+import static org.firstinspires.ftc.team3736.b_hardware.DriveConstants.RUN_USING_ENCODER;
+import static org.firstinspires.ftc.team3736.b_hardware.DriveConstants.rpmToVelocity;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -15,9 +15,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.internal.system.Misc;
-import org.firstinspires.ftc.team3123.c_util.LoggingUtil;
-import org.firstinspires.ftc.team3123.c_util.RegressionUtil;
-import org.firstinspires.ftc.team3123.s_stuff.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.team3736.c_util.LoggingUtil;
+import org.firstinspires.ftc.team3736.c_util.RegressionUtil;
+import org.firstinspires.ftc.team3736.c_util.sample.SampleMecanumDrive;
 
 import java.util.ArrayList;
 import java.util.List;

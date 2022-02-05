@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.team3123.s_stuff.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.team3123.s_stuff.drive.StandardTrackingWheelLocalizer;
+import org.firstinspires.ftc.team3736.c_util.sample.SampleMecanumDrive;
+import org.firstinspires.ftc.team3736.c_util.sample.StandardTrackingWheelLocalizer;
 
 /**
  * Opmode designed to assist the user in tuning the `StandardTrackingWheelLocalizer`'s
