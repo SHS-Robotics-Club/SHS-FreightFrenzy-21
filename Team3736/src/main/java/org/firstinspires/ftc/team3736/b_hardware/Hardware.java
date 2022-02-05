@@ -20,7 +20,6 @@ public class Hardware {
 	public MotorGroup leftMotors, rightMotors;
 
 	public Motor arm;
-	public CRServo claw;
 
 	public Hardware(HardwareMap hwMap) {
 
@@ -48,8 +47,5 @@ public class Hardware {
 		arm.resetEncoder();
 		arm.setRunMode(Motor.RunMode.PositionControl);
 		arm.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-
-		//CLAW--------------------------------------------------------------------------------------
-		claw = new CRServo(hwMap, "claw");
 	}
 }
