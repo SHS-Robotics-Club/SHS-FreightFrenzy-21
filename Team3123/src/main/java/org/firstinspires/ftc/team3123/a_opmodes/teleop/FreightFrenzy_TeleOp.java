@@ -21,21 +21,27 @@ import java.text.DecimalFormat;
 //@Disabled
 @TeleOp(name = "FF: TeleOp", group = "TeleOp")
 @Config
+
 public class FreightFrenzy_TeleOp extends LinearOpMode {
-	//Config
-	public static double    ARM_COEFFICIENT     = 0.05;
-	public static double 	ARM_TOLERANCE 		= 10;
-	public static int 		ARM_INCREMENT 		= 100;
+	//TICK TO DEG
+	private static final double      nr40d2     = (360.0/1120.0)/2;
 
-	public static double 	DRIVE_SPEED 	= 1;
-	public static double 	TURN_SPEED 		= 1;
+	//CONFIGURATION
+	public static double 	ARM_SPEED 		    = 0.15;          //Max Speed???   [0:1]
+	public static double    ARM_COEFFICIENT     = 0.05;          //P controller ???
+	public static double 	ARM_TOLERANCE 		= 25;            //Allowed maximum error
+	public static double 	ARM_INCREMENT 		= 15/nr40d2;     //Amount of DEG to increment by
 
-	public static double 	CLAW_OPEN 		= 0.25;
-	public static double 	CLAW_CLOSE 		= -0.2;
 
-	//Round
-	private static final DecimalFormat vt = new DecimalFormat("0.00");
-	private static final DecimalFormat tm = new DecimalFormat("00");
+	public static double 	DRIVE_SPEED 	    = 1;            //Drive speed multiplied by this    [0:1]
+	public static double 	TURN_SPEED 		    = 1;            //Turn speed multiplied by this     [0:1]
+
+	public static double 	CLAW_OPEN 		    = 0.25;         //POS for claw to go to when open   [-1:1]
+	public static double 	CLAW_CLOSE 		    = -0.2;         //POS for claw to go to when closed [-1:1]
+
+	//NUMBER FORMATS
+	private static final DecimalFormat twoPoints = new DecimalFormat("0.00");
+	private static final DecimalFormat twoPlaces = new DecimalFormat("00");
 
 	//Set Time
 	ElapsedTime time = new ElapsedTime();
@@ -59,9 +65,9 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 		waitForStart();
 		time.reset();
 
-		//Toggle Claw
-		long        lastx           = 0;
-		boolean     clw             = false;
+		//CLAW VAR
+		long        lastx           = 0;        //Time since X last pressed
+		boolean     clw             = false;    //Claw toggle state
 
 		if (isStopRequested()) return;
 
@@ -70,39 +76,51 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 			//Set the drive mode and controls
 			GamepadEx gp1 = new GamepadEx(gamepad1);
 
+			//DRIVE---------------------------------------------------------------------------------
+			//Set Differential drive
 			DifferentialDrive difDrive = new DifferentialDrive(robot.leftMotors, robot.rightMotors);
 
+			//Calculate values based off sticks
 			double drive = gp1.getLeftY()*DRIVE_SPEED;
 			double turn  = gp1.getRightX()*TURN_SPEED;
 
+			//Apply values
 			difDrive.arcadeDrive(drive, turn);
 
-			//Arm
-			robot.arm.set(0.15);
+			//ARM-----------------------------------------------------------------------------------
+			//Set settings and such
+			robot.arm.set(ARM_SPEED);
 			robot.arm.setPositionCoefficient(ARM_COEFFICIENT);
 			robot.arm.setPositionTolerance(ARM_TOLERANCE);
 
+			//Increment arm pos based on triggers
 			if (gp1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0) {
-				robot.arm.setTargetPosition(robot.arm.getCurrentPosition() - ARM_INCREMENT);
+				robot.arm.setTargetPosition((int) (robot.arm.getCurrentPosition() - ARM_INCREMENT));
 			} else if (gp1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0) {
-				robot.arm.setTargetPosition(robot.arm.getCurrentPosition() + ARM_INCREMENT);
+				robot.arm.setTargetPosition((int) (robot.arm.getCurrentPosition() + ARM_INCREMENT));
 			} else {
 				robot.arm.setTargetPosition(robot.arm.getCurrentPosition());
 			}
 
-			//Claw
+			if (gp1.getButton(GamepadKeys.Button.DPAD_DOWN)) {
+				robot.arm.setTargetPosition(0);
+			}
+
+			//CLAW----------------------------------------------------------------------------------
+			//Toggle claw state if last button press not within 500ms
 			if (gp1.getButton(GamepadKeys.Button.X)  && System.currentTimeMillis() - lastx > 500) {
 				lastx = System.currentTimeMillis();
 				clw = !clw;
 			}
 
+			//Set open/close values when toggled
 			if (clw) {
 				robot.claw.set(CLAW_OPEN);
 			} else {
 				robot.claw.set(CLAW_CLOSE);
 			}
 
-			//Duck Spinner
+			//DUCK----------------------------------------------------------------------------------
 			if (gp1.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
 				robot.duckSpin.set(1);
 			} else if (gp1.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
@@ -111,6 +129,9 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 				robot.duckSpin.set(0);
 			}
 
+			//Misc Things---------------------------------------------------------------------------
+
+			//Get bot voltage
 			double volt = Double.POSITIVE_INFINITY;
 			for (VoltageSensor sensor : hardwareMap.voltageSensor) {
 				double voltage = sensor.getVoltage();
@@ -126,12 +147,13 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 			long t3 = t2 % 60;
 			t2 = t2 / 60;
 
-			//Telemetry
-			telemetry.addData("!Status", "Run Time: " + tm.format(t2)+ ":" + tm.format(t3) + ":" + tm.format(t1));
-			telemetry.addData("Arm Deg", robot.arm.getCurrentPosition());
-			telemetry.addData("DRIVE", drive);
-			telemetry.addData("TURN", turn);
-			dTelemetry.addData("Voltage", vt.format(volt));
+			//TELEMETRY--------------------------------------------------------------------------------------
+			telemetry.addData("!Status", "Run Time: " + twoPlaces.format(t2)+ ":" + twoPlaces.format(t3) + ":" + twoPlaces.format(t1));  //Run Time HH:MM:SS
+			telemetry.addData("Arm TICK", robot.arm.getCurrentPosition());
+			telemetry.addData("Arm DEG", robot.arm.getCurrentPosition() *nr40d2);
+			telemetry.addData("DRIVE", twoPoints.format(drive));            //Drive Value
+			telemetry.addData("TURN", twoPoints.format(turn));              //Turn Value
+			dTelemetry.addData("Voltage", twoPoints.format(volt));          //Voltage on FTC-Dash
 			telemetry.update();
 
 			idle();
