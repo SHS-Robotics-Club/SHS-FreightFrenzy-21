@@ -27,17 +27,17 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 	private static final double      nr40d2     = (360.0/1120.0)/2;
 
 	//CONFIGURATION
-	public static double 	ARM_SPEED 		    = 0.15;          //Max Speed???   [0:1]
+	public static double 	ARM_SPEED 		    = 0.2;          //Max Speed???   [0:1]
 	public static double    ARM_COEFFICIENT     = 0.05;          //P controller ???
 	public static double 	ARM_TOLERANCE 		= 25;            //Allowed maximum error
-	public static double 	ARM_INCREMENT 		= 15/nr40d2;     //Amount of DEG to increment by
+	public static double 	ARM_INCREMENT 		= 10/nr40d2;     //Amount of DEG to increment by
 
 
 	public static double 	DRIVE_SPEED 	    = 1;            //Drive speed multiplied by this    [0:1]
 	public static double 	TURN_SPEED 		    = 1;            //Turn speed multiplied by this     [0:1]
 
-	public static double 	CLAW_OPEN 		    = 0.25;         //POS for claw to go to when open   [-1:1]
-	public static double 	CLAW_CLOSE 		    = -0.2;         //POS for claw to go to when closed [-1:1]
+	public static double 	CLAW_OPEN 		    = 0.2;         //POS for claw to go to when open   [-1:1]
+	public static double 	CLAW_CLOSE 		    = -0.15;         //POS for claw to go to when closed [-1:1]
 
 	//NUMBER FORMATS
 	private static final DecimalFormat twoPoints = new DecimalFormat("0.00");
@@ -92,6 +92,7 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 			robot.arm.set(ARM_SPEED);
 			robot.arm.setPositionCoefficient(ARM_COEFFICIENT);
 			robot.arm.setPositionTolerance(ARM_TOLERANCE);
+			//robot.arm.setDistancePerPulse(1);
 
 			//Increment arm pos based on triggers
 			if (gp1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0) {
@@ -102,8 +103,23 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 				robot.arm.setTargetPosition(robot.arm.getCurrentPosition());
 			}
 
+			//Set levels using D-PAD
 			if (gp1.getButton(GamepadKeys.Button.DPAD_DOWN)) {
+				robot.arm.set(0.125);
 				robot.arm.setTargetPosition(0);
+			} else if (gp1.getButton(GamepadKeys.Button.DPAD_RIGHT)) {
+//				robot.arm.set(0.13);
+				robot.arm.setTargetPosition((int) (65 / nr40d2));
+			} else if (gp1.getButton(GamepadKeys.Button.DPAD_UP)) {
+//				robot.arm.set(0.13);
+				robot.arm.setTargetPosition((int) (100 / nr40d2));
+			} else if (gp1.getButton(GamepadKeys.Button.DPAD_LEFT)) {
+//				robot.arm.set(0.13);
+				robot.arm.setTargetPosition((int) (140 / nr40d2));
+			}
+
+			if (robot.arm.getCurrentPosition() > 150/nr40d2) {
+				robot.arm.setTargetPosition((int) (148.9/nr40d2));
 			}
 
 			//CLAW----------------------------------------------------------------------------------

@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.team3123.b_hardware.Hardware;
 
 @SuppressWarnings("unused")
-@Autonomous(name="FF: ¼s Forward", group="Auto")
+@Autonomous(name="FF: ¼s Forward", group="Auto", preselectTeleOp="FF: TeleOp")
 //@Disabled
 public class Auto_025_Second extends LinearOpMode {
 

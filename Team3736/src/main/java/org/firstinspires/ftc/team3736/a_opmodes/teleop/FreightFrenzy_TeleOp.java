@@ -99,7 +99,7 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 			}
 
 			//CLAW----------------------------------------------------------------------------------
-			//Toggle claw state if last button press not within 500ms
+/*			//Toggle claw state if last button press not within 500ms
 			if (gp1.getButton(GamepadKeys.Button.X)  && System.currentTimeMillis() - lastx > 500) {
 				lastx = System.currentTimeMillis();
 				clw = !clw;
@@ -110,7 +110,7 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 				robot.claw.set(CLAW_OPEN);
 			} else {
 				robot.claw.set(CLAW_CLOSE);
-			}
+			}*/
 
 			//Misc Things---------------------------------------------------------------------------
 
