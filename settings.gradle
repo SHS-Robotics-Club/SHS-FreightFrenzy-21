@@ -1,2 +1,2 @@
 rootProject.name = 'SHS_FTC_2021-22'
-include(':FtcRobotController', ':Team3123' , ':Team3736' , ':Team3736old')
+include(':FtcRobotController', ':Team3123' , ':Team3736' , ':examples', 'RoadRunner')

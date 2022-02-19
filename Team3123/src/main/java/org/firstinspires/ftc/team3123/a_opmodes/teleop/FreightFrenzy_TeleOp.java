@@ -163,7 +163,11 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 			long t3 = t2 % 60;
 			t2 = t2 / 60;
 
+
+
 			//TELEMETRY--------------------------------------------------------------------------------------
+			FtcDashboard.getInstance().startCameraStream(robot.webcam, 0); //Broadcast webcam to FTCDash
+
 			telemetry.addData("!Status", "Run Time: " + twoPlaces.format(t2)+ ":" + twoPlaces.format(t3) + ":" + twoPlaces.format(t1));  //Run Time HH:MM:SS
 			telemetry.addData("Arm TICK", robot.arm.getCurrentPosition());
 			telemetry.addData("Arm DEG", robot.arm.getCurrentPosition() *nr40d2);
