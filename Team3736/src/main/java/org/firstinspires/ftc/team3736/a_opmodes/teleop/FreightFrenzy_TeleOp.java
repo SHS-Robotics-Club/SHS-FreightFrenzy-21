@@ -25,15 +25,12 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 	//CONFIGURATION
 	public static double 	ARM_SPEED 		    = 0.15;     //Speed???   [0:1]
 	public static double    ARM_COEFFICIENT     = 0.05;     //P controller ???
-	public static double 	ARM_TOLERANCE 		= 10;       //Allowed maximum error
-	public static int 		ARM_INCREMENT 		= 100;      //Amount of TICK COUNT arm goes up or down with each press
+	public static double 	ARM_TOLERANCE 		= 25;       //Allowed maximum error
+	public static int 		ARM_INCREMENT 		= 66;      //Amount of TICK COUNT arm goes up or down with each press
 
 
 	public static double 	DRIVE_SPEED 	= 1;            //Drive speed multiplied by this    [0:1]
-	public static double 	TURN_SPEED 		= 1;            //Turn speed multiplied by this     [0:1]
-
-	public static double 	CLAW_OPEN 		= 0.25;         //POS for claw to go to when open   [-1:1]
-	public static double 	CLAW_CLOSE 		= -0.2;         //POS for claw to go to when closed [-1:1]
+	public static double 	TURN_SPEED 		= -1;            //Turn speed multiplied by this     [0:1]
 
 	//NUMBER FORMATS
 	private static final DecimalFormat twoPoints = new DecimalFormat("0.00");
@@ -61,10 +58,6 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 		waitForStart();
 		time.reset();
 
-		//CLAW VAR
-		long        lastx           = 0;        //Time since X last pressed
-		boolean     clw             = false;    //Claw toggle state
-
 		if (isStopRequested()) return;
 
 		while (opModeIsActive()) {
@@ -91,26 +84,12 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 
 			//Increment arm pos based on triggers
 			if (gp1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0) {
-				robot.arm.setTargetPosition(robot.arm.getCurrentPosition() - ARM_INCREMENT);
-			} else if (gp1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0) {
 				robot.arm.setTargetPosition(robot.arm.getCurrentPosition() + ARM_INCREMENT);
+			} else if (gp1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0) {
+				robot.arm.setTargetPosition(robot.arm.getCurrentPosition() - ARM_INCREMENT);
 			} else {
 				robot.arm.setTargetPosition(robot.arm.getCurrentPosition());
 			}
-
-			//CLAW----------------------------------------------------------------------------------
-/*			//Toggle claw state if last button press not within 500ms
-			if (gp1.getButton(GamepadKeys.Button.X)  && System.currentTimeMillis() - lastx > 500) {
-				lastx = System.currentTimeMillis();
-				clw = !clw;
-			}
-
-			//Set open/close values when toggled
-			if (clw) {
-				robot.claw.set(CLAW_OPEN);
-			} else {
-				robot.claw.set(CLAW_CLOSE);
-			}*/
 
 			//Misc Things---------------------------------------------------------------------------
 
