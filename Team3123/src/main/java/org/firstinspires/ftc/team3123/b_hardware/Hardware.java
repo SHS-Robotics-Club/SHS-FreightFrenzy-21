@@ -91,6 +91,8 @@ public class Hardware {
 
 		webcam.setViewportRenderer(OpenCvCamera.ViewportRenderer.GPU_ACCELERATED);
 
+		webcam.setPipeline(new pipeline());
+
 		webcam.setMillisecondsPermissionTimeout(2500);
 		webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
 			@Override
