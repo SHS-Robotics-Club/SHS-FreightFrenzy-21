@@ -56,5 +56,7 @@ public class Hardware {
 
 		//Claw
 		claw = new CRServo(hwMap, "claw");
+
+		//Camera
 	}
 }

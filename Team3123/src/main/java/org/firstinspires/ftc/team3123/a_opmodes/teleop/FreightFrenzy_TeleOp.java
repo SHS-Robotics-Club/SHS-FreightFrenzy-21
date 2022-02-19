@@ -105,7 +105,7 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 
 			//Set levels using D-PAD
 			if (gp1.getButton(GamepadKeys.Button.DPAD_DOWN)) {
-				robot.arm.set(0.125);
+				//robot.arm.set(0.125);
 				robot.arm.setTargetPosition(0);
 			} else if (gp1.getButton(GamepadKeys.Button.DPAD_RIGHT)) {
 //				robot.arm.set(0.13);
@@ -138,9 +138,9 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 
 			//DUCK----------------------------------------------------------------------------------
 			if (gp1.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
-				robot.duckSpin.set(1);
+				robot.duckSpin.set(0.8);
 			} else if (gp1.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
-				robot.duckSpin.set(-1);
+				robot.duckSpin.set(-0.8);
 			} else {
 				robot.duckSpin.set(0);
 			}
