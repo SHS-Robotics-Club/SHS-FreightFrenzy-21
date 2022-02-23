@@ -41,6 +41,8 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 import org.firstinspires.ftc.team3123.d_roadrunner.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.team3123.d_roadrunner.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.team3123.d_roadrunner.trajectorysequence.TrajectorySequenceRunner;
+import org.firstinspires.ftc.team3123.d_roadrunner.util.AxisDirection;
+import org.firstinspires.ftc.team3123.d_roadrunner.util.BNO055IMUUtil;
 import org.firstinspires.ftc.team3123.d_roadrunner.util.LynxModuleUtil;
 
 import java.util.Arrays;
@@ -110,13 +112,13 @@ public class SampleTankDrive extends TankDrive {
         // and the placement of the dot/orientation from https://docs.revrobotics.com/rev-control-system/control-system-overview/dimensions#imu-location
         //
         // For example, if +Y in this diagram faces downwards, you would use AxisDirection.NEG_Y.
-        // BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
+        BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_X);
 
         // add/remove motors depending on your robot (e.g., 6WD)
-        DcMotorEx leftFront = hardwareMap.get(DcMotorEx.class, "leftFront");
-        DcMotorEx leftRear = hardwareMap.get(DcMotorEx.class, "leftRear");
-        DcMotorEx rightRear = hardwareMap.get(DcMotorEx.class, "rightRear");
-        DcMotorEx rightFront = hardwareMap.get(DcMotorEx.class, "rightFront");
+        DcMotorEx leftFront = hardwareMap.get(DcMotorEx.class, "lFM");
+        DcMotorEx leftRear = hardwareMap.get(DcMotorEx.class, "lBM");
+        DcMotorEx rightRear = hardwareMap.get(DcMotorEx.class, "rBM");
+        DcMotorEx rightFront = hardwareMap.get(DcMotorEx.class, "rFM");
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
         leftMotors = Arrays.asList(leftFront, leftRear);
@@ -139,7 +141,8 @@ public class SampleTankDrive extends TankDrive {
         }
 
         // TODO: reverse any motors using DcMotor.setDirection()
-
+        rightFront.setDirection(DcMotor.Direction.REVERSE);
+        rightRear.setDirection(DcMotor.Direction.REVERSE);
         // TODO: if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
 
