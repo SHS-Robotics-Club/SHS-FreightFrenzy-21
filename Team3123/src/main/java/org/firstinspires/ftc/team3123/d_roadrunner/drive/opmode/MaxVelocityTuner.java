@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.team3123.b_hardware.DriveConstants;
-import org.firstinspires.ftc.team3123.d_roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.team3123.d_roadrunner.drive.SampleTankDrive;
 import org.firstinspires.ftc.team3123.d_roadrunner.drive.SampleTankDrive;
 
 import java.util.Objects;

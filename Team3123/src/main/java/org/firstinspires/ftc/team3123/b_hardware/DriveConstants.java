@@ -2,11 +2,6 @@ package org.firstinspires.ftc.team3123.b_hardware;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
-/*
- * Max Velocity: 85.24063400365162
- * Voltage Compensated kF: 13.118780621572213
- * kF Tuned: 13.218780621572213
-*/
 
 /*
  * Constants shared between multiple drive types.
@@ -39,8 +34,8 @@ public class DriveConstants {
      * from DriveVelocityPIDTuner.
      */
     public static final boolean RUN_USING_ENCODER = true;
-    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0, 0, 0,
-            getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
+    public static PIDFCoefficients MOTOR_VELO_PID = new PIDFCoefficients(0.065, 0.05, 0.2,
+            12.978580018939396);//getMotorVelocityF(MAX_RPM / 60 * TICKS_PER_REV));
 
     /*
      * These are physical constants that can be determined from your robot (including the track
@@ -50,9 +45,9 @@ public class DriveConstants {
      * angular distances although most angular parameters are wrapped in Math.toRadians() for
      * convenience. Make sure to exclude any gear ratio included in MOTOR_CONFIG from GEAR_RATIO.
      */
-    public static double WHEEL_RADIUS = 4; // in
+    public static double WHEEL_RADIUS = 2; // in
     public static double GEAR_RATIO = 0.6666666666666666; // output (wheel) speed / input (motor) speed
-    public static double TRACK_WIDTH = 10.5; // in
+    public static double TRACK_WIDTH = 15; // in
 
     /*
      * These are the feedforward parameters used to model the drive motor behavior. If you are using
@@ -75,27 +70,27 @@ public class DriveConstants {
      * Note from LearnRoadRunner.com:
      * The velocity and acceleration constraints were calculated based on the following equation:
      * ((MAX_RPM / 60) * GEAR_RATIO * WHEEL_RADIUS * 2 * Math.PI) * 0.85
-     * Resulting in 80.7040246122178 in/s.
+     * Resulting in 40.3520123061089 in/s.
      * This is only 85% of the theoretical maximum velocity of the bot, following the recommendation above.
      * This is capped at 85% because there are a number of variables that will prevent your bot from actually
      * reaching this maximum velocity: voltage dropping over the game, bot weight, general mechanical inefficiencies, etc.
      * However, you can push this higher yourself if you'd like. Perhaps raise it to 90-95% of the theoretically
-     * max velocity. The theoretically maximum velocity is 94.94591130849152 in/s.
+     * max velocity. The theoretically maximum velocity is 47.47295565424576 in/s.
      * Just make sure that your bot can actually reach this maximum velocity. Path following will be detrimentally
      * affected if it is aiming for a velocity not actually possible.
      *
      * The maximum acceleration is somewhat arbitrary and it is recommended that you tweak this yourself based on
      * actual testing. Just set it at a reasonable value and keep increasing until your path following starts
-     * to degrade. As of now, it simply mirrors the velocity, resulting in 80.7040246122178 in/s/s
+     * to degrade. As of now, it simply mirrors the velocity, resulting in 40.3520123061089 in/s/s
      *
      * Maximum Angular Velocity is calculated as: maximum velocity / trackWidth * (180 / Math.PI) but capped at 360°/s.
      * You are free to raise this on your own if you would like. It is best determined through experimentation.
 
      */
-    public static double MAX_VEL = 76.71657060328646; //80.7040246122178;
-    public static double MAX_ACCEL = 80.7040246122178;
-    public static double MAX_ANG_VEL = Math.toRadians(360);
-    public static double MAX_ANG_ACCEL = Math.toRadians(360);
+    public static double MAX_VEL = 32.91192303760735; //40.3520123061089;
+    public static double MAX_ACCEL = 40.3520123061089;
+    public static double MAX_ANG_VEL = Math.toRadians(220.19047619047618);
+    public static double MAX_ANG_ACCEL = Math.toRadians(220.19047619047618);
 
 
     public static double encoderTicksToInches(double ticks) {
