@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.team3123.b_hardware;
 
-import static org.firstinspires.ftc.team3123.b_hardware.DriveConstants.MOTOR_VELO_PID;
-
 import com.arcrobotics.ftclib.hardware.motors.CRServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.hardware.motors.MotorEx;
@@ -54,22 +52,22 @@ public class Hardware {
 		frontLeft.resetEncoder();
 		frontLeft.setRunMode(MotorEx.RunMode.VelocityControl);
 		frontLeft.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-		//frontLeft.setVeloCoefficients(MOTOR_VELO_PID.p, MOTOR_VELO_PID.i, MOTOR_VELO_PID.d);
+		frontLeft.setVeloCoefficients(0, 0, 0);
 
 		backLeft.resetEncoder();
 		backLeft.setRunMode(MotorEx.RunMode.VelocityControl);
 		backLeft.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-		//backLeft.setVeloCoefficients(MOTOR_VELO_PID.p, MOTOR_VELO_PID.i, MOTOR_VEL O_PID.d);
+		backLeft.setVeloCoefficients(0, 0, 0);
 
 		frontRight.resetEncoder();
 		frontRight.setRunMode(MotorEx.RunMode.VelocityControl);
 		frontRight.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-		//frontRight.setVeloCoefficients(MOTOR_VELO_PID.p, MOTOR_VELO_PID.i, MOTOR_VELO_PID.d);
+		frontRight.setVeloCoefficients(0, 0, 0);
 
 		backRight.resetEncoder();
 		backRight.setRunMode(MotorEx.RunMode.VelocityControl);
 		backRight.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-		//backRight.setVeloCoefficients(MOTOR_VELO_PID.p, MOTOR_VELO_PID.i, MOTOR_VELO_PID.d);
+		backRight.setVeloCoefficients(0, 0, 0);
 
 		//Duck Spiner
 		duckSpin = new MotorEx(hwMap, "duck");
