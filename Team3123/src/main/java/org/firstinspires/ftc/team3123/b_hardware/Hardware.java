@@ -54,22 +54,22 @@ public class Hardware {
 		frontLeft.resetEncoder();
 		frontLeft.setRunMode(MotorEx.RunMode.VelocityControl);
 		frontLeft.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-		frontLeft.setVeloCoefficients(MOTOR_VELO_PID.p, MOTOR_VELO_PID.i, MOTOR_VELO_PID.d);
+		//frontLeft.setVeloCoefficients(MOTOR_VELO_PID.p, MOTOR_VELO_PID.i, MOTOR_VELO_PID.d);
 
 		backLeft.resetEncoder();
 		backLeft.setRunMode(MotorEx.RunMode.VelocityControl);
 		backLeft.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-		backLeft.setVeloCoefficients(MOTOR_VELO_PID.p, MOTOR_VELO_PID.i, MOTOR_VELO_PID.d);
+		//backLeft.setVeloCoefficients(MOTOR_VELO_PID.p, MOTOR_VELO_PID.i, MOTOR_VEL O_PID.d);
 
 		frontRight.resetEncoder();
 		frontRight.setRunMode(MotorEx.RunMode.VelocityControl);
 		frontRight.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-		frontRight.setVeloCoefficients(MOTOR_VELO_PID.p, MOTOR_VELO_PID.i, MOTOR_VELO_PID.d);
+		//frontRight.setVeloCoefficients(MOTOR_VELO_PID.p, MOTOR_VELO_PID.i, MOTOR_VELO_PID.d);
 
 		backRight.resetEncoder();
 		backRight.setRunMode(MotorEx.RunMode.VelocityControl);
 		backRight.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-		backRight.setVeloCoefficients(MOTOR_VELO_PID.p, MOTOR_VELO_PID.i, MOTOR_VELO_PID.d);
+		//backRight.setVeloCoefficients(MOTOR_VELO_PID.p, MOTOR_VELO_PID.i, MOTOR_VELO_PID.d);
 
 		//Duck Spiner
 		duckSpin = new MotorEx(hwMap, "duck");
