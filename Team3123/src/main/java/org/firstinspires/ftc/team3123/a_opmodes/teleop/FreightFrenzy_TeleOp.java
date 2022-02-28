@@ -27,7 +27,8 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 	private static final double      nr40d2     = (360.0/1120.0)/2;
 
 	//CONFIGURATION
-	public static double 	ARM_SPEED 		    = 0.2;          //Max Speed???   [0:1]
+	public static double 	ARM_SPEED 		    = 0.3
+			;          //Max Speed???   [0:1]
 	public static double    ARM_COEFFICIENT     = 0.05;          //P controller ???
 	public static double 	ARM_TOLERANCE 		= 25;            //Allowed maximum error
 	public static double 	ARM_INCREMENT 		= 10/nr40d2;     //Amount of DEG to increment by
