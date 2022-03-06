@@ -1,108 +1,329 @@
 package org.firstinspires.ftc.team3123.b_hardware;
 
+import static org.firstinspires.ftc.team3123.b_hardware.DriveConstants.MAX_ACCEL;
+import static org.firstinspires.ftc.team3123.b_hardware.DriveConstants.MAX_ANG_ACCEL;
+import static org.firstinspires.ftc.team3123.b_hardware.DriveConstants.MAX_ANG_VEL;
+import static org.firstinspires.ftc.team3123.b_hardware.DriveConstants.MAX_VEL;
 import static org.firstinspires.ftc.team3123.b_hardware.DriveConstants.MOTOR_VELO_PID;
+import static org.firstinspires.ftc.team3123.b_hardware.DriveConstants.RUN_USING_ENCODER;
+import static org.firstinspires.ftc.team3123.b_hardware.DriveConstants.TRACK_WIDTH;
+import static org.firstinspires.ftc.team3123.b_hardware.DriveConstants.kV;
+import static org.firstinspires.ftc.team3123.b_hardware.DriveConstants.kA;
+import static org.firstinspires.ftc.team3123.b_hardware.DriveConstants.kStatic;
+import static org.firstinspires.ftc.team3123.b_hardware.DriveConstants.encoderTicksToInches;
 
-import com.arcrobotics.ftclib.hardware.motors.CRServo;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
-import com.arcrobotics.ftclib.hardware.motors.MotorEx;
-import com.arcrobotics.ftclib.hardware.motors.MotorGroup;
+import androidx.annotation.NonNull;
+
+import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.control.PIDCoefficients;
+import com.acmerobotics.roadrunner.drive.DriveSignal;
+import com.acmerobotics.roadrunner.drive.TankDrive;
+import com.acmerobotics.roadrunner.followers.TankPIDVAFollower;
+import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
+import com.acmerobotics.roadrunner.trajectory.constraints.AngularVelocityConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.MinVelocityConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.TankVelocityConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
+import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.lynx.LynxModule;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.team3123.c_vision.pipeline;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvWebcam;
+import org.firstinspires.ftc.team3123.d_roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.team3123.d_roadrunner.trajectorysequence.TrajectorySequenceBuilder;
+import org.firstinspires.ftc.team3123.d_roadrunner.trajectorysequence.TrajectorySequenceRunner;
+import org.firstinspires.ftc.team3123.d_roadrunner.util.AxisDirection;
+import org.firstinspires.ftc.team3123.d_roadrunner.util.BNO055IMUUtil;
+import org.firstinspires.ftc.team3123.d_roadrunner.util.LynxModuleUtil;
 
+import java.util.Arrays;
+import java.util.List;
 
-/**
- * Motor:       Left Front Motor:       "lFM"
- * Motor:       Right Front Motor:      "rFM"
- * Motor:       Left Back Motor:        "lBM"
- * Motor:       Right Back Motor:       "rBM"
- * Motor:       Arm:                    "arm"
- * Motor:       Duck Spinner:           "duck"
- * CRServo:     Claw:                   "claw"
- * Webcam:      LogitechC270            "logiC270"
+/*
+ * Simple tank drive hardware implementation for REV hardware.
  */
-public class RRHardware {
+@Config
+public class RRHardware extends TankDrive {
+    public static PIDCoefficients AXIAL_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients CROSS_TRACK_PID = new PIDCoefficients(0, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(0, 0, 0);
 
-	public MotorEx frontLeft, frontRight, backLeft, backRight;
-	public MotorGroup leftMotors, rightMotors, Motors;
+    public static double VX_WEIGHT = 1;
+    public static double OMEGA_WEIGHT = 1;
 
-	public MotorEx duckSpin;
+    private TrajectorySequenceRunner trajectorySequenceRunner;
 
-	public Motor arm;
-	public CRServo claw;
+    private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL, MAX_ANG_VEL,
+            TRACK_WIDTH);
+    private static final TrajectoryAccelerationConstraint accelConstraint = getAccelerationConstraint(MAX_ACCEL);
 
-	public OpenCvWebcam webcam;
+    private TrajectoryFollower follower;
 
-	public RRHardware(HardwareMap hwMap) {
+    private List<DcMotorEx> motors, leftMotors, rightMotors;
+    private BNO055IMU imu;
 
-		//Drive Motors
-		frontLeft  = new MotorEx(hwMap, "lFM");
-		frontRight = new MotorEx(hwMap, "rFM");
-		backLeft  = new MotorEx(hwMap, "lBM");
-		backRight = new MotorEx(hwMap, "rBM");
+    private VoltageSensor batteryVoltageSensor;
 
-		leftMotors = new MotorGroup(frontLeft, backLeft);
-		rightMotors = new MotorGroup(frontRight, backRight);
-		Motors = new MotorGroup(frontLeft, backLeft, frontRight, backRight);
+    public RRHardware(HardwareMap hardwareMap) {
+        super(kV, kA, kStatic, TRACK_WIDTH);
 
+        follower = new TankPIDVAFollower(AXIAL_PID, CROSS_TRACK_PID,
+                new Pose2d(0.5, 0.5, Math.toRadians(5.0)), 0.5);
 
-		frontLeft.resetEncoder();
-		frontLeft.setRunMode(MotorEx.RunMode.VelocityControl);
-		frontLeft.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-		frontLeft.setVeloCoefficients(MOTOR_VELO_PID.p, MOTOR_VELO_PID.i, MOTOR_VELO_PID.d);
+        LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
 
-		backLeft.resetEncoder();
-		backLeft.setRunMode(MotorEx.RunMode.VelocityControl);
-		backLeft.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-		backLeft.setVeloCoefficients(MOTOR_VELO_PID.p, MOTOR_VELO_PID.i, MOTOR_VELO_PID.d);
+        batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-		frontRight.resetEncoder();
-		frontRight.setRunMode(MotorEx.RunMode.VelocityControl);
-		frontRight.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-		frontRight.setVeloCoefficients(MOTOR_VELO_PID.p, MOTOR_VELO_PID.i, MOTOR_VELO_PID.d);
+        for (LynxModule module : hardwareMap.getAll(LynxModule.class)) {
+            module.setBulkCachingMode(LynxModule.BulkCachingMode.AUTO);
+        }
 
-		backRight.resetEncoder();
-		backRight.setRunMode(MotorEx.RunMode.VelocityControl);
-		backRight.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
-		backRight.setVeloCoefficients(MOTOR_VELO_PID.p, MOTOR_VELO_PID.i, MOTOR_VELO_PID.d);
+        // TODO: adjust the names of the following hardware devices to match your
+        // configuration
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.RADIANS;
+        imu.initialize(parameters);
 
-		//Duck Spiner
-		duckSpin = new MotorEx(hwMap, "duck");
-		duckSpin.resetEncoder();
-		duckSpin.setRunMode(MotorEx.RunMode.RawPower);
+        // TODO: If the hub containing the IMU you are using is mounted so that the
+        // "REV" logo does
+        // not face up, remap the IMU axes so that the z-axis points upward (normal to
+        // the floor.)
+        //
+        // | +Z axis
+        // |
+        // |
+        // |
+        // _______|_____________ +Y axis
+        // / |_____________/|__________
+        // / REV / EXPANSION //
+        // / / HUB //
+        // /_______/_____________//
+        // |_______/_____________|/
+        // /
+        // / +X axis
+        //
+        // This diagram is derived from the axes in section 3.4
+        // https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bno055-ds000.pdf
+        // and the placement of the dot/orientation from
+        // https://docs.revrobotics.com/rev-control-system/control-system-overview/dimensions#imu-location
+        //
+        // For example, if +Y in this diagram faces downwards, you would use
+        // AxisDirection.NEG_Y.
+        BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_X);
 
-		//Arm
-		arm = new Motor(hwMap, "arm");
-		arm.resetEncoder();
-		arm.setRunMode(Motor.RunMode.PositionControl);
-		arm.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+        // add/remove motors depending on your robot (e.g., 6WD)
+        DcMotorEx leftFront = hardwareMap.get(DcMotorEx.class, "lFM");
+        DcMotorEx leftRear = hardwareMap.get(DcMotorEx.class, "lBM");
+        DcMotorEx rightRear = hardwareMap.get(DcMotorEx.class, "rBM");
+        DcMotorEx rightFront = hardwareMap.get(DcMotorEx.class, "rFM");
 
-		//Claw
-		claw = new CRServo(hwMap, "claw");
+        motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
+        leftMotors = Arrays.asList(leftFront, leftRear);
+        rightMotors = Arrays.asList(rightFront, rightRear);
 
-		//Camera
-		int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
-		webcam = OpenCvCameraFactory.getInstance().createWebcam(hwMap.get(WebcamName.class, "logiC270"), cameraMonitorViewId);
+        for (DcMotorEx motor : motors) {
+            MotorConfigurationType motorConfigurationType = motor.getMotorType().clone();
+            motorConfigurationType.setAchieveableMaxRPMFraction(1.0);
+            motor.setMotorType(motorConfigurationType);
+        }
 
-		webcam.setViewportRenderer(OpenCvCamera.ViewportRenderer.GPU_ACCELERATED);
+        if (RUN_USING_ENCODER) {
+            setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        }
 
-		webcam.setPipeline(new pipeline());
+        setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-		webcam.setMillisecondsPermissionTimeout(2500);
-		webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
-			@Override
-			public void onOpened() {
-				webcam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
-			}
-			@Override
-			public void onError(int errorCode) {    //This will be called if the camera could not be opened
+        if (RUN_USING_ENCODER && MOTOR_VELO_PID != null) {
+            setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, MOTOR_VELO_PID);
+        }
 
-			}
-		});
-	}
+        // TODO: reverse any motors using DcMotor.setDirection()
+        rightFront.setDirection(DcMotor.Direction.REVERSE);
+        rightRear.setDirection(DcMotor.Direction.REVERSE);
+        // TODO: if desired, use setLocalizer() to change the localization method
+        // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
+
+        trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
+    }
+
+    public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {
+        return new TrajectoryBuilder(startPose, VEL_CONSTRAINT, accelConstraint);
+    }
+
+    public TrajectoryBuilder trajectoryBuilder(Pose2d startPose, boolean reversed) {
+        return new TrajectoryBuilder(startPose, reversed, VEL_CONSTRAINT, accelConstraint);
+    }
+
+    public TrajectoryBuilder trajectoryBuilder(Pose2d startPose, double startHeading) {
+        return new TrajectoryBuilder(startPose, startHeading, VEL_CONSTRAINT, accelConstraint);
+    }
+
+    public TrajectorySequenceBuilder trajectorySequenceBuilder(Pose2d startPose) {
+        return new TrajectorySequenceBuilder(
+                startPose,
+                VEL_CONSTRAINT, accelConstraint,
+                MAX_ANG_VEL, MAX_ANG_ACCEL);
+    }
+
+    public void turnAsync(double angle) {
+        trajectorySequenceRunner.followTrajectorySequenceAsync(
+                trajectorySequenceBuilder(getPoseEstimate())
+                        .turn(angle)
+                        .build());
+    }
+
+    public void turn(double angle) {
+        turnAsync(angle);
+        waitForIdle();
+    }
+
+    public void followTrajectoryAsync(Trajectory trajectory) {
+        trajectorySequenceRunner.followTrajectorySequenceAsync(
+                trajectorySequenceBuilder(trajectory.start())
+                        .addTrajectory(trajectory)
+                        .build());
+    }
+
+    public void followTrajectory(Trajectory trajectory) {
+        followTrajectoryAsync(trajectory);
+        waitForIdle();
+    }
+
+    public void followTrajectorySequenceAsync(TrajectorySequence trajectorySequence) {
+        trajectorySequenceRunner.followTrajectorySequenceAsync(trajectorySequence);
+    }
+
+    public void followTrajectorySequence(TrajectorySequence trajectorySequence) {
+        followTrajectorySequenceAsync(trajectorySequence);
+        waitForIdle();
+    }
+
+    public Pose2d getLastError() {
+        return trajectorySequenceRunner.getLastPoseError();
+    }
+
+    public void update() {
+        updatePoseEstimate();
+        DriveSignal signal = trajectorySequenceRunner.update(getPoseEstimate(), getPoseVelocity());
+        if (signal != null)
+            setDriveSignal(signal);
+    }
+
+    public void waitForIdle() {
+        while (!Thread.currentThread().isInterrupted() && isBusy())
+            update();
+    }
+
+    public boolean isBusy() {
+        return trajectorySequenceRunner.isBusy();
+    }
+
+    public void setMode(DcMotor.RunMode runMode) {
+        for (DcMotorEx motor : motors) {
+            motor.setMode(runMode);
+        }
+    }
+
+    public void setZeroPowerBehavior(DcMotor.ZeroPowerBehavior zeroPowerBehavior) {
+        for (DcMotorEx motor : motors) {
+            motor.setZeroPowerBehavior(zeroPowerBehavior);
+        }
+    }
+
+    public void setPIDFCoefficients(DcMotor.RunMode runMode, PIDFCoefficients coefficients) {
+        PIDFCoefficients compensatedCoefficients = new PIDFCoefficients(
+                coefficients.p, coefficients.i, coefficients.d,
+                coefficients.f * 12 / batteryVoltageSensor.getVoltage());
+        for (DcMotorEx motor : motors) {
+            motor.setPIDFCoefficients(runMode, compensatedCoefficients);
+        }
+    }
+
+    public void setWeightedDrivePower(Pose2d drivePower) {
+        Pose2d vel = drivePower;
+
+        if (Math.abs(drivePower.getX()) + Math.abs(drivePower.getHeading()) > 1) {
+            // re-normalize the powers according to the weights
+            double denom = VX_WEIGHT * Math.abs(drivePower.getX())
+                    + OMEGA_WEIGHT * Math.abs(drivePower.getHeading());
+
+            vel = new Pose2d(
+                    VX_WEIGHT * drivePower.getX(),
+                    0,
+                    OMEGA_WEIGHT * drivePower.getHeading()).div(denom);
+        }
+
+        setDrivePower(vel);
+    }
+
+    @NonNull
+    @Override
+    public List<Double> getWheelPositions() {
+        double leftSum = 0, rightSum = 0;
+        for (DcMotorEx leftMotor : leftMotors) {
+            leftSum += encoderTicksToInches(leftMotor.getCurrentPosition());
+        }
+        for (DcMotorEx rightMotor : rightMotors) {
+            rightSum += encoderTicksToInches(rightMotor.getCurrentPosition());
+        }
+        return Arrays.asList(leftSum / leftMotors.size(), rightSum / rightMotors.size());
+    }
+
+    public List<Double> getWheelVelocities() {
+        double leftSum = 0, rightSum = 0;
+        for (DcMotorEx leftMotor : leftMotors) {
+            leftSum += encoderTicksToInches(leftMotor.getVelocity());
+        }
+        for (DcMotorEx rightMotor : rightMotors) {
+            rightSum += encoderTicksToInches(rightMotor.getVelocity());
+        }
+        return Arrays.asList(leftSum / leftMotors.size(), rightSum / rightMotors.size());
+    }
+
+    @Override
+    public void setMotorPowers(double v, double v1) {
+        for (DcMotorEx leftMotor : leftMotors) {
+            leftMotor.setPower(v);
+        }
+        for (DcMotorEx rightMotor : rightMotors) {
+            rightMotor.setPower(v1);
+        }
+    }
+
+    @Override
+    public double getRawExternalHeading() {
+        return imu.getAngularOrientation().firstAngle;
+    }
+
+    @Override
+    public Double getExternalHeadingVelocity() {
+        // To work around an SDK bug, use -zRotationRate in place of xRotationRate
+        // and -xRotationRate in place of zRotationRate (yRotationRate behaves as
+        // expected). This bug does NOT affect orientation.
+        //
+        // See https://github.com/FIRST-Tech-Challenge/FtcRobotController/issues/251 for
+        // details.
+        return (double) -imu.getAngularVelocity().xRotationRate;
+    }
+
+    public static TrajectoryVelocityConstraint getVelocityConstraint(double maxVel, double maxAngularVel,
+            double trackWidth) {
+        return new MinVelocityConstraint(Arrays.asList(
+                new AngularVelocityConstraint(maxAngularVel),
+                new TankVelocityConstraint(maxVel, trackWidth)));
+    }
+
+    public static TrajectoryAccelerationConstraint getAccelerationConstraint(double maxAccel) {
+        return new ProfileAccelerationConstraint(maxAccel);
+    }
 }

@@ -5,12 +5,12 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.team3123.d_roadrunner.drive.SampleTankDrive;
+import org.firstinspires.ftc.team3123.b_hardware.RRHardware;
 
 /*
  * This is a simple routine to test turning capabilities.
  */
-//@Disabled
+@Disabled
 @Config
 @Autonomous(group = "drive")
 public class TurnTest extends LinearOpMode {
@@ -18,11 +18,12 @@ public class TurnTest extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        SampleTankDrive drive = new SampleTankDrive(hardwareMap);
+        RRHardware drive = new RRHardware(hardwareMap);
 
         waitForStart();
 
-        if (isStopRequested()) return;
+        if (isStopRequested())
+            return;
 
         drive.turn(Math.toRadians(ANGLE));
     }

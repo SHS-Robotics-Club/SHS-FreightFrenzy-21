@@ -9,7 +9,8 @@ import org.firstinspires.ftc.team3123.GlobalConfig;
 public class ToggleAlliance extends LinearOpMode {
 	@Override
 	public void runOpMode() throws InterruptedException {
-		GlobalConfig.alliance = GlobalConfig.alliance == GlobalConfig.Alliance.RED ? GlobalConfig.Alliance.BLUE : GlobalConfig.Alliance.RED;
+		GlobalConfig.alliance = GlobalConfig.alliance == GlobalConfig.Alliance.RED ? GlobalConfig.Alliance.BLUE
+				: GlobalConfig.Alliance.RED;
 		telemetry.addLine("Alliance: " + GlobalConfig.alliance);
 		telemetry.update();
 	}

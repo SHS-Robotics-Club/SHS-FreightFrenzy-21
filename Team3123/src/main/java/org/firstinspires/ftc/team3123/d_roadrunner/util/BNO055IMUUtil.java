@@ -18,22 +18,31 @@ public class BNO055IMUUtil {
     }
 
     /**
-     * Remap BNO055 IMU axes and signs. For reference, the default order is {@link AxesOrder#XYZ}.
-     * Call after {@link BNO055IMU#initialize(BNO055IMU.Parameters)}. Although this isn't
-     * mentioned in the datasheet, the axes order appears to affect the onboard sensor fusion.
+     * Remap BNO055 IMU axes and signs. For reference, the default order is
+     * {@link AxesOrder#XYZ}.
+     * Call after {@link BNO055IMU#initialize(BNO055IMU.Parameters)}. Although this
+     * isn't
+     * mentioned in the datasheet, the axes order appears to affect the onboard
+     * sensor fusion.
      *
-     * Adapted from <a href="https://ftcforum.firstinspires.org/forum/ftc-technology/53812-mounting-the-revhub-vertically?p=56587#post56587">this post</a>.
-     * Reference the <a href="https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bno055-ds000.pdf">BNO055 Datasheet</a> for details.
+     * Adapted from <a href=
+     * "https://ftcforum.firstinspires.org/forum/ftc-technology/53812-mounting-the-revhub-vertically?p=56587#post56587">this
+     * post</a>.
+     * Reference the <a href=
+     * "https://www.bosch-sensortec.com/media/boschsensortec/downloads/datasheets/bst-bno055-ds000.pdf">BNO055
+     * Datasheet</a> for details.
      *
-     * NOTE: Remapping axes can be somewhat confusing. Instead, use {@link #remapZAxis}, if appropriate.
+     * NOTE: Remapping axes can be somewhat confusing. Instead, use
+     * {@link #remapZAxis}, if appropriate.
      *
-     * @param imu IMU
+     * @param imu   IMU
      * @param order axes order
      * @param signs axes signs
      */
     public static void swapThenFlipAxes(BNO055IMU imu, AxesOrder order, AxesSigns signs) {
         try {
-            // the indices correspond with the 2-bit axis encodings specified in the datasheet
+            // the indices correspond with the 2-bit axis encodings specified in the
+            // datasheet
             int[] indices = order.indices();
             // AxesSign's values align with the datasheet
             int axisMapSigns = signs.bVal;
@@ -54,8 +63,8 @@ public class BNO055IMUUtil {
                 throw new InvalidAxisRemapException("Coordinate system is left-handed");
             }
 
-            // Bit:  7  6 |  5  4  |  3  2  |  1  0  |
-            //   reserved | z axis | y axis | x axis |
+            // Bit: 7 6 | 5 4 | 3 2 | 1 0 |
+            // reserved | z axis | y axis | x axis |
             int axisMapConfig = indices[2] << 4 | indices[1] << 2 | indices[0];
 
             // Enter CONFIG mode
@@ -80,9 +89,10 @@ public class BNO055IMUUtil {
 
     /**
      * Remaps the IMU coordinate system so that the remapped +Z faces the provided
-     * {@link AxisDirection}. See {@link #swapThenFlipAxes} for details about the remapping.
+     * {@link AxisDirection}. See {@link #swapThenFlipAxes} for details about the
+     * remapping.
      *
-     * @param imu IMU
+     * @param imu       IMU
      * @param direction axis direction
      */
     public static void remapZAxis(BNO055IMU imu, AxisDirection direction) {
@@ -112,7 +122,7 @@ public class BNO055IMUUtil {
      * Now deprecated due to unintuitive parameter order.
      * Use {@link #swapThenFlipAxes} or {@link #remapZAxis} instead.
      *
-     * @param imu IMU
+     * @param imu   IMU
      * @param order axes order
      * @param signs axes signs
      */

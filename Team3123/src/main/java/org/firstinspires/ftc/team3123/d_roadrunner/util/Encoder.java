@@ -5,7 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 /**
- * Wraps a motor instance to provide corrected velocity counts and allow reversing independently of the corresponding
+ * Wraps a motor instance to provide corrected velocity counts and allow
+ * reversing independently of the corresponding
  * slot's motor direction
  */
 public class Encoder {
@@ -67,8 +68,11 @@ public class Encoder {
     }
 
     /**
-     * Allows you to set the direction of the counts and velocity without modifying the motor's direction state
-     * @param direction either reverse or forward depending on if encoder counts should be negated
+     * Allows you to set the direction of the counts and velocity without modifying
+     * the motor's direction state
+     * 
+     * @param direction either reverse or forward depending on if encoder counts
+     *                  should be negated
      */
     public void setDirection(Direction direction) {
         this.direction = direction;

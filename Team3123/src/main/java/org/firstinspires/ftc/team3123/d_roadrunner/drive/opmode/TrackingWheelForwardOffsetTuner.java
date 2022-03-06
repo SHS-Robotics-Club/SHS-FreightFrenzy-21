@@ -12,31 +12,45 @@ import com.qualcomm.robotcore.util.MovingStatistics;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.internal.system.Misc;
-import org.firstinspires.ftc.team3123.d_roadrunner.drive.SampleTankDrive;
+import org.firstinspires.ftc.team3123.b_hardware.RRHardware;
 import org.firstinspires.ftc.team3123.d_roadrunner.drive.StandardTrackingWheelLocalizer;
 
 /**
- * This routine determines the effective forward offset for the lateral tracking wheel.
- * The procedure executes a point turn at a given angle for a certain number of trials,
- * along with a specified delay in milliseconds. The purpose of this is to track the
- * change in the y position during the turn. The offset, or distance, of the lateral tracking
- * wheel from the center or rotation allows the wheel to spin during a point turn, leading
- * to an incorrect measurement for the y position. This creates an arc around around
- * the center of rotation with an arc length of change in y and a radius equal to the forward
- * offset. We can compute this offset by calculating (change in y position) / (change in heading)
- * which returns the radius if the angle (change in heading) is in radians. This is based
+ * This routine determines the effective forward offset for the lateral tracking
+ * wheel.
+ * The procedure executes a point turn at a given angle for a certain number of
+ * trials,
+ * along with a specified delay in milliseconds. The purpose of this is to track
+ * the
+ * change in the y position during the turn. The offset, or distance, of the
+ * lateral tracking
+ * wheel from the center or rotation allows the wheel to spin during a point
+ * turn, leading
+ * to an incorrect measurement for the y position. This creates an arc around
+ * around
+ * the center of rotation with an arc length of change in y and a radius equal
+ * to the forward
+ * offset. We can compute this offset by calculating (change in y position) /
+ * (change in heading)
+ * which returns the radius if the angle (change in heading) is in radians. This
+ * is based
  * on the arc length formula of length = theta * radius.
  *
- * To run this routine, simply adjust the desired angle and specify the number of trials
- * and the desired delay. Then, run the procedure. Once it finishes, it will print the
- * average of all the calculated forward offsets derived from the calculation. This calculated
- * forward offset is then added onto the current forward offset to produce an overall estimate
- * for the forward offset. You can run this procedure as many times as necessary until a
+ * To run this routine, simply adjust the desired angle and specify the number
+ * of trials
+ * and the desired delay. Then, run the procedure. Once it finishes, it will
+ * print the
+ * average of all the calculated forward offsets derived from the calculation.
+ * This calculated
+ * forward offset is then added onto the current forward offset to produce an
+ * overall estimate
+ * for the forward offset. You can run this procedure as many times as necessary
+ * until a
  * satisfactory result is produced.
  */
-//@Disabled
+@Disabled
 @Config
-@Autonomous(group="drive")
+@Autonomous(group = "drive")
 public class TrackingWheelForwardOffsetTuner extends LinearOpMode {
     public static double ANGLE = 180; // deg
     public static int NUM_TRIALS = 5;
@@ -46,7 +60,7 @@ public class TrackingWheelForwardOffsetTuner extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        SampleTankDrive drive = new SampleTankDrive(hardwareMap);
+        RRHardware drive = new RRHardware(hardwareMap);
 
         if (!(drive.getLocalizer() instanceof StandardTrackingWheelLocalizer)) {
             RobotLog.setGlobalErrorMsg("StandardTrackingWheelLocalizer is not being set in the "
@@ -60,7 +74,8 @@ public class TrackingWheelForwardOffsetTuner extends LinearOpMode {
 
         waitForStart();
 
-        if (isStopRequested()) return;
+        if (isStopRequested())
+            return;
 
         telemetry.clearAll();
         telemetry.addLine("Running...");

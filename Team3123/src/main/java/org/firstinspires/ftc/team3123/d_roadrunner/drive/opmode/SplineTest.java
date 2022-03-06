@@ -7,21 +7,22 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.team3123.d_roadrunner.drive.SampleTankDrive;
+import org.firstinspires.ftc.team3123.b_hardware.RRHardware;
 
 /*
  * This is an example of a more complex path to really test the tuning.
  */
-//@Disabled
+@Disabled
 @Autonomous(group = "drive")
 public class SplineTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
-        SampleTankDrive drive = new SampleTankDrive(hardwareMap);
+        RRHardware drive = new RRHardware(hardwareMap);
 
         waitForStart();
 
-        if (isStopRequested()) return;
+        if (isStopRequested())
+            return;
 
         Trajectory traj = drive.trajectoryBuilder(new Pose2d())
                 .splineTo(new Vector2d(30, 30), 0)
@@ -34,7 +35,6 @@ public class SplineTest extends LinearOpMode {
         drive.followTrajectory(
                 drive.trajectoryBuilder(traj.end(), true)
                         .splineTo(new Vector2d(0, 0), Math.toRadians(180))
-                        .build()
-        );
+                        .build());
     }
 }

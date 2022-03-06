@@ -13,16 +13,15 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-
 /**
- * Motor:       Left Front Motor:       "lFM"
- * Motor:       Right Front Motor:      "rFM"
- * Motor:       Left Back Motor:        "lBM"
- * Motor:       Right Back Motor:       "rBM"
- * Motor:       Arm:                    "arm"
- * Motor:       Duck Spinner:           "duck"
- * CRServo:     Claw:                   "claw"
- * Webcam:      LogitechC270            "logiC270"
+ * Motor: 		Left Front Motor: 	"lFM"
+ * Motor: 		Right Front Motor: 	"rFM"
+ * Motor: 		Left Back Motor: 	"lBM"
+ * Motor: 		Right Back Motor: 	"rBM"
+ * Motor: 		Arm: 				"arm"
+ * Motor: 		Duck Spinner: 		"duck"
+ * CRServo: 	Claw: 				"claw"
+ * Webcam: 		LogitechC270 		"logiC270"
  */
 public class Hardware {
 
@@ -34,20 +33,21 @@ public class Hardware {
 	public Motor arm;
 	public CRServo claw;
 
+	public Motor led;
+
 	public OpenCvWebcam webcam;
 
 	public Hardware(HardwareMap hwMap) {
 
-		//Drive Motors
-		frontLeft  = new MotorEx(hwMap, "lFM");
+		// Drive Motors
+		frontLeft = new MotorEx(hwMap, "lFM");
 		frontRight = new MotorEx(hwMap, "rFM");
-		backLeft  = new MotorEx(hwMap, "lBM");
+		backLeft = new MotorEx(hwMap, "lBM");
 		backRight = new MotorEx(hwMap, "rBM");
 
 		leftMotors = new MotorGroup(frontLeft, backLeft);
 		rightMotors = new MotorGroup(frontRight, backRight);
 		Motors = new MotorGroup(frontLeft, backLeft, frontRight, backRight);
-
 
 		frontLeft.resetEncoder();
 		frontLeft.setRunMode(MotorEx.RunMode.VelocityControl);
@@ -69,23 +69,30 @@ public class Hardware {
 		backRight.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 		backRight.setVeloCoefficients(0, 0, 0);
 
-		//Duck Spiner
+		// Duck Spiner
 		duckSpin = new MotorEx(hwMap, "duck");
 		duckSpin.resetEncoder();
-		duckSpin.setRunMode(MotorEx.RunMode.RawPower);
+		duckSpin.setRunMode(MotorEx.RunMode.VelocityControl);
+		duckSpin.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
+		duckSpin.setVeloCoefficients(0, 0, 0);
 
-		//Arm
+		// Arm
 		arm = new Motor(hwMap, "arm");
 		arm.resetEncoder();
 		arm.setRunMode(Motor.RunMode.PositionControl);
 		arm.setZeroPowerBehavior(Motor.ZeroPowerBehavior.BRAKE);
 
-		//Claw
+		// Claw
 		claw = new CRServo(hwMap, "claw");
 
-		//Camera
-		int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hwMap.appContext.getPackageName());
-		webcam = OpenCvCameraFactory.getInstance().createWebcam(hwMap.get(WebcamName.class, "logiC270"), cameraMonitorViewId);
+		// LED
+		led = new Motor(hwMap, "led");
+
+		// Camera
+		int cameraMonitorViewId = hwMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id",
+				hwMap.appContext.getPackageName());
+		webcam = OpenCvCameraFactory.getInstance().createWebcam(hwMap.get(WebcamName.class, "logiC270"),
+				cameraMonitorViewId);
 
 		webcam.setViewportRenderer(OpenCvCamera.ViewportRenderer.GPU_ACCELERATED);
 
@@ -97,8 +104,9 @@ public class Hardware {
 			public void onOpened() {
 				webcam.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
 			}
+
 			@Override
-			public void onError(int errorCode) {    //This will be called if the camera could not be opened
+			public void onError(int errorCode) { // This will be called if the camera could not be opened
 
 			}
 		});

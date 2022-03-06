@@ -20,7 +20,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.team3123.d_roadrunner.drive.SampleTankDrive;
+import org.firstinspires.ftc.team3123.b_hardware.RRHardware;
 
 import java.util.List;
 
@@ -48,7 +48,7 @@ import java.util.List;
  * user to reset the position of the bot in the event that it drifts off the path.
  * Pressing B/O (Xbox/PS4) will cede control back to the tuning process.
  */
-//@Disabled
+@Disabled
 @Config
 @Autonomous(group = "drive")
 public class DriveVelocityPIDTuner extends LinearOpMode {
@@ -74,7 +74,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-        SampleTankDrive drive = new SampleTankDrive(hardwareMap);
+        RRHardware drive = new RRHardware(hardwareMap);
 
         Mode mode = Mode.TUNING_MODE;
 
@@ -93,12 +93,12 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
 
         waitForStart();
 
-        if (isStopRequested()) return;
+        if (isStopRequested())
+            return;
 
         boolean movingForwards = true;
         MotionProfile activeProfile = generateProfile(true);
         double profileStart = clock.seconds();
-
 
         while (!isStopRequested()) {
             telemetry.addData("mode", mode);
@@ -132,8 +132,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
                         telemetry.addData("measuredVelocity" + i, velocities.get(i));
                         telemetry.addData(
                                 "error" + i,
-                                motionState.getV() - velocities.get(i)
-                        );
+                                motionState.getV() - velocities.get(i));
                     }
                     break;
                 case DRIVER_MODE:
@@ -150,9 +149,7 @@ public class DriveVelocityPIDTuner extends LinearOpMode {
                             new Pose2d(
                                     -gamepad1.left_stick_y,
                                     -gamepad1.left_stick_x,
-                                    -gamepad1.right_stick_x
-                            )
-                    );
+                                    -gamepad1.right_stick_x));
                     break;
             }
 

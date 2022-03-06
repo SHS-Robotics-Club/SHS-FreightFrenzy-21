@@ -7,7 +7,7 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class GlobalConfig {
 
-	//Alliance switch
+	// Alliance switch
 	public enum Alliance {
 		RED,
 		BLUE;
@@ -19,6 +19,6 @@ public class GlobalConfig {
 		}
 	}
 
-	public static Alliance alliance = Alliance.RED; //Current Alliance
+	public static Alliance alliance = Alliance.RED; // Current Alliance
 
 }

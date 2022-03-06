@@ -11,7 +11,8 @@ public class TrajectorySequence {
     private final List<SequenceSegment> sequenceList;
 
     public TrajectorySequence(List<SequenceSegment> sequenceList) {
-        if (sequenceList.size() == 0) throw new EmptySequenceException();
+        if (sequenceList.size() == 0)
+            throw new EmptySequenceException();
 
         this.sequenceList = Collections.unmodifiableList(sequenceList);
     }

@@ -8,27 +8,36 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.team3123.d_roadrunner.drive.SampleTankDrive;
+import org.firstinspires.ftc.team3123.b_hardware.RRHardware;
 import org.firstinspires.ftc.team3123.d_roadrunner.drive.StandardTrackingWheelLocalizer;
 
 /**
- * Opmode designed to assist the user in tuning the `StandardTrackingWheelLocalizer`'s
- * LATERAL_DISTANCE value. The LATERAL_DISTANCE is the center-to-center distance of the parallel
+ * Opmode designed to assist the user in tuning the
+ * `StandardTrackingWheelLocalizer`'s
+ * LATERAL_DISTANCE value. The LATERAL_DISTANCE is the center-to-center distance
+ * of the parallel
  * wheels.
  *
  * Tuning Routine:
  *
- * 1. Set the LATERAL_DISTANCE value in StandardTrackingWheelLocalizer.java to the physical
- * measured value. This need only be an estimated value as you will be tuning it anyways.
+ * 1. Set the LATERAL_DISTANCE value in StandardTrackingWheelLocalizer.java to
+ * the physical
+ * measured value. This need only be an estimated value as you will be tuning it
+ * anyways.
  *
- * 2. Make a mark on the bot (with a piece of tape or sharpie or however you wish) and make an
- * similar mark right below the indicator on your bot. This will be your reference point to
+ * 2. Make a mark on the bot (with a piece of tape or sharpie or however you
+ * wish) and make an
+ * similar mark right below the indicator on your bot. This will be your
+ * reference point to
  * ensure you've turned exactly 360°.
  *
- * 3. Although not entirely necessary, having the bot's pose being drawn in dashbooard does help
- * identify discrepancies in the LATERAL_DISTANCE value. To access the dashboard,
+ * 3. Although not entirely necessary, having the bot's pose being drawn in
+ * dashbooard does help
+ * identify discrepancies in the LATERAL_DISTANCE value. To access the
+ * dashboard,
  * connect your computer to the RC's WiFi network. In your browser, navigate to
- * https://192.168.49.1:8080/dash if you're using the RC phone or https://192.168.43.1:8080/dash
+ * https://192.168.49.1:8080/dash if you're using the RC phone or
+ * https://192.168.43.1:8080/dash
  * if you are using the Control Hub.
  * Ensure the field is showing (select the field view in top right of the page).
  *
@@ -36,33 +45,46 @@ import org.firstinspires.ftc.team3123.d_roadrunner.drive.StandardTrackingWheelLo
  *
  * 5. Use the right joystick on gamepad 1 to turn the bot counterclockwise.
  *
- * 6. Spin the bot 10 times, counterclockwise. Make sure to keep track of these turns.
+ * 6. Spin the bot 10 times, counterclockwise. Make sure to keep track of these
+ * turns.
  *
- * 7. Once the bot has finished spinning 10 times, press A to finishing the routine. The indicators
+ * 7. Once the bot has finished spinning 10 times, press A to finishing the
+ * routine. The indicators
  * on the bot and on the ground you created earlier should be lined up.
  *
  * 8. Your effective LATERAL_DISTANCE will be given. Stick this value into your
  * StandardTrackingWheelLocalizer.java class.
  *
- * 9. If this value is incorrect, run the routine again while adjusting the LATERAL_DISTANCE value
- * yourself. Read the heading output and follow the advice stated in the note below to manually
+ * 9. If this value is incorrect, run the routine again while adjusting the
+ * LATERAL_DISTANCE value
+ * yourself. Read the heading output and follow the advice stated in the note
+ * below to manually
  * nudge the values yourself.
  *
  * Note:
- * It helps to pay attention to how the pose on the field is drawn in dashboard. A blue circle with
- * a line from the circumference to the center should be present, representing the bot. The line
- * indicates forward. If your LATERAL_DISTANCE value is tuned currently, the pose drawn in
- * dashboard should keep track with the pose of your actual bot. If the drawn bot turns slower than
- * the actual bot, the LATERAL_DISTANCE should be decreased. If the drawn bot turns faster than the
+ * It helps to pay attention to how the pose on the field is drawn in dashboard.
+ * A blue circle with
+ * a line from the circumference to the center should be present, representing
+ * the bot. The line
+ * indicates forward. If your LATERAL_DISTANCE value is tuned currently, the
+ * pose drawn in
+ * dashboard should keep track with the pose of your actual bot. If the drawn
+ * bot turns slower than
+ * the actual bot, the LATERAL_DISTANCE should be decreased. If the drawn bot
+ * turns faster than the
  * actual bot, the LATERAL_DISTANCE should be increased.
  *
- * If your drawn bot oscillates around a point in dashboard, don't worry. This is because the
- * position of the perpendicular wheel isn't perfectly set and causes a discrepancy in the
- * effective center of rotation. You can ignore this effect. The center of rotation will be offset
- * slightly but your heading will still be fine. This does not affect your overall tracking
+ * If your drawn bot oscillates around a point in dashboard, don't worry. This
+ * is because the
+ * position of the perpendicular wheel isn't perfectly set and causes a
+ * discrepancy in the
+ * effective center of rotation. You can ignore this effect. The center of
+ * rotation will be offset
+ * slightly but your heading will still be fine. This does not affect your
+ * overall tracking
  * precision. The heading should still line up.
  */
-//@Disabled
+@Disabled
 @Config
 @TeleOp(group = "drive")
 public class TrackingWheelLateralDistanceTuner extends LinearOpMode {
@@ -70,7 +92,7 @@ public class TrackingWheelLateralDistanceTuner extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        SampleTankDrive drive = new SampleTankDrive(hardwareMap);
+        RRHardware drive = new RRHardware(hardwareMap);
 
         if (!(drive.getLocalizer() instanceof StandardTrackingWheelLocalizer)) {
             RobotLog.setGlobalErrorMsg("StandardTrackingWheelLocalizer is not being set in the "
@@ -87,7 +109,8 @@ public class TrackingWheelLateralDistanceTuner extends LinearOpMode {
 
         waitForStart();
 
-        if (isStopRequested()) return;
+        if (isStopRequested())
+            return;
 
         telemetry.clearAll();
         telemetry.update();
@@ -127,6 +150,7 @@ public class TrackingWheelLateralDistanceTuner extends LinearOpMode {
 
         telemetry.update();
 
-        while (!isStopRequested()) idle();
+        while (!isStopRequested())
+            idle();
     }
 }

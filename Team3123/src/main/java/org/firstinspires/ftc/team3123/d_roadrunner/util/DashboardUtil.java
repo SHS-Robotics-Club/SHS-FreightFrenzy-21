@@ -8,12 +8,12 @@ import com.acmerobotics.roadrunner.path.Path;
 import java.util.List;
 
 /**
- * Set of helper functions for drawing Road Runner paths and trajectories on dashboard canvases.
+ * Set of helper functions for drawing Road Runner paths and trajectories on
+ * dashboard canvases.
  */
 public class DashboardUtil {
     private static final double DEFAULT_RESOLUTION = 2.0; // distance units; presumed inches
     private static final double ROBOT_RADIUS = 9; // in
-
 
     public static void drawPoseHistory(Canvas canvas, List<Pose2d> poseHistory) {
         double[] xPoints = new double[poseHistory.size()];

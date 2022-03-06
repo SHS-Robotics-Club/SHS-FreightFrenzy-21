@@ -14,15 +14,15 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Set of utilities for loading trajectories from assets (the plugin save location).
+ * Set of utilities for loading trajectories from assets (the plugin save
+ * location).
  */
 public class AssetsTrajectoryManager {
 
     /**
      * Loads the group config.
      */
-    public static @Nullable
-    TrajectoryGroupConfig loadGroupConfig() {
+    public static @Nullable TrajectoryGroupConfig loadGroupConfig() {
         try {
             InputStream inputStream = AppUtil.getDefContext().getAssets().open(
                     "trajectory/" + TrajectoryConfigManager.GROUP_FILENAME);

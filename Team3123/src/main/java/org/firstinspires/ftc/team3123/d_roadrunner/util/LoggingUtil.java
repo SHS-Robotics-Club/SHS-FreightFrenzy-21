@@ -11,8 +11,7 @@ import java.util.List;
  * Utility functions for log files.
  */
 public class LoggingUtil {
-    public static final File ROAD_RUNNER_FOLDER =
-            new File(AppUtil.ROOT_FOLDER + "/RoadRunner/");
+    public static final File ROAD_RUNNER_FOLDER = new File(AppUtil.ROOT_FOLDER + "/RoadRunner/");
 
     private static final long LOG_QUOTA = 25 * 1024 * 1024; // 25MB log quota for now
 
@@ -29,19 +28,19 @@ public class LoggingUtil {
     private static void pruneLogsIfNecessary() {
         List<File> logFiles = new ArrayList<>();
         buildLogList(logFiles, ROAD_RUNNER_FOLDER);
-        Collections.sort(logFiles, (lhs, rhs) ->
-                Long.compare(lhs.lastModified(), rhs.lastModified()));
+        Collections.sort(logFiles, (lhs, rhs) -> Long.compare(lhs.lastModified(), rhs.lastModified()));
 
         long dirSize = 0;
-        for (File file: logFiles) {
+        for (File file : logFiles) {
             dirSize += file.length();
         }
 
         while (dirSize > LOG_QUOTA) {
-            if (logFiles.size() == 0) break;
+            if (logFiles.size() == 0)
+                break;
             File fileToRemove = logFiles.remove(0);
             dirSize -= fileToRemove.length();
-            //noinspection ResultOfMethodCallIgnored
+            // noinspection ResultOfMethodCallIgnored
             fileToRemove.delete();
         }
     }
@@ -50,7 +49,7 @@ public class LoggingUtil {
      * Obtain a log file with the provided name
      */
     public static File getLogFile(String name) {
-        //noinspection ResultOfMethodCallIgnored
+        // noinspection ResultOfMethodCallIgnored
         ROAD_RUNNER_FOLDER.mkdirs();
 
         pruneLogsIfNecessary();

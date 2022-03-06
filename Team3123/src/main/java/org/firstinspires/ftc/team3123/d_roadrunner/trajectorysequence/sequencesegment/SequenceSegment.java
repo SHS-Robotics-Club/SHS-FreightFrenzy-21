@@ -14,8 +14,7 @@ public abstract class SequenceSegment {
     protected SequenceSegment(
             double duration,
             Pose2d startPose, Pose2d endPose,
-            List<TrajectoryMarker> markers
-    ) {
+            List<TrajectoryMarker> markers) {
         this.duration = duration;
         this.startPose = startPose;
         this.endPose = endPose;

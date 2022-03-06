@@ -10,18 +10,19 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.team3123.d_roadrunner.drive.SampleTankDrive;
+import org.firstinspires.ftc.team3123.b_hardware.RRHardware;
 
 import java.util.Objects;
 
 /**
- * This routine is designed to calculate the maximum angular velocity your bot can achieve under load.
+ * This routine is designed to calculate the maximum angular velocity your bot
+ * can achieve under load.
  * <p>
  * Upon pressing start, your bot will turn at max power for RUNTIME seconds.
  * <p>
  * Further fine tuning of MAX_ANG_VEL may be desired.
  */
-//@Disabled
+@Disabled
 @Config
 @Autonomous(group = "drive")
 public class MaxAngularVeloTuner extends LinearOpMode {
@@ -32,7 +33,7 @@ public class MaxAngularVeloTuner extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        SampleTankDrive drive = new SampleTankDrive(hardwareMap);
+        RRHardware drive = new RRHardware(hardwareMap);
 
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -55,7 +56,8 @@ public class MaxAngularVeloTuner extends LinearOpMode {
         while (!isStopRequested() && timer.seconds() < RUNTIME) {
             drive.updatePoseEstimate();
 
-            Pose2d poseVelo = Objects.requireNonNull(drive.getPoseVelocity(), "poseVelocity() must not be null. Ensure that the getWheelVelocities() method has been overridden in your localizer.");
+            Pose2d poseVelo = Objects.requireNonNull(drive.getPoseVelocity(),
+                    "poseVelocity() must not be null. Ensure that the getWheelVelocities() method has been overridden in your localizer.");
 
             maxAngVelocity = Math.max(poseVelo.getHeading(), maxAngVelocity);
         }
@@ -66,6 +68,7 @@ public class MaxAngularVeloTuner extends LinearOpMode {
         telemetry.addData("Max Angular Velocity (deg)", Math.toDegrees(maxAngVelocity));
         telemetry.update();
 
-        while (!isStopRequested()) idle();
+        while (!isStopRequested())
+            idle();
     }
 }

@@ -23,79 +23,84 @@ import java.text.DecimalFormat;
 @Config
 
 public class FreightFrenzy_TeleOp extends LinearOpMode {
-	//TICK TO DEG
-	private static final double      nr40d2     = (360.0/1120.0)/2;
+	// TICK TO DEG
+	private static final double nr40d2 = (360.0 / 1120.0) / 2;
 
-	//CONFIGURATION
-	public static double 	ARM_SPEED 		    = 0.3
-			;          //Max Speed???   [0:1]
-	public static double    ARM_COEFFICIENT     = 0.05;          //P controller ???
-	public static double 	ARM_TOLERANCE 		= 25;            //Allowed maximum error
-	public static double 	ARM_INCREMENT 		= 10/nr40d2;     //Amount of DEG to increment by
+	// CONFIGURATION
+	public static double ARM_SPEED = 0.2; // Max Speed??? [0:1]
+	public static double ARM_COEFFICIENT = 0.05; // P controller ???
+	public static double ARM_TOLERANCE = 5 / nr40d2; // Allowed maximum error
+	public static double ARM_INCREMENT = 10 / nr40d2; // Amount of DEG to increment by
 
+	public static double DRIVE_SPEED = 1; // Drive speed multiplied by this [0:1]
+	public static double TURN_SPEED = 0.65; // Turn speed multiplied by this [0:1]
+	public static double DUCK_SPEED = 0.8; // Turn speed multiplied by this [0:1]
 
-	public static double 	DRIVE_SPEED 	    = 1;            //Drive speed multiplied by this    [0:1]
-	public static double 	TURN_SPEED 		    = 1;            //Turn speed multiplied by this     [0:1]
+	public static double CLAW_OPEN = -0.15; // POS for claw to go to when open [-1:1]
+	public static double CLAW_CLOSE = 0.25; // POS for claw to go to when closed [-1:1]
 
-	public static double 	CLAW_OPEN 		    = 0.2;         //POS for claw to go to when open   [-1:1]
-	public static double 	CLAW_CLOSE 		    = -0.15;         //POS for claw to go to when closed [-1:1]
+	//public static double LED = 0;
 
-	//NUMBER FORMATS
+	// NUMBER FORMATS
 	private static final DecimalFormat twoPoints = new DecimalFormat("0.00");
 	private static final DecimalFormat twoPlaces = new DecimalFormat("00");
 
-	//Set Time
+	// Set Time
 	ElapsedTime time = new ElapsedTime();
 
 	@Override
 	public void runOpMode() {
 
-		//Get Hardware
+		// Get Hardware
 		final Hardware robot = new Hardware(hardwareMap);
+		robot.led.set(1);
 
-		//FTC Dash Telemetry
+		// FTC Dash Telemetry
 		FtcDashboard dashboard = FtcDashboard.getInstance();
 		telemetry = new MultipleTelemetry(telemetry, dashboard.getTelemetry());
 		Telemetry dTelemetry = dashboard.getTelemetry();
-
-		//Set Status
+		// Set Status
 		telemetry.addData("Status", "Initialized");
 		telemetry.update();
 
-		//START
+		// START
 		waitForStart();
 		time.reset();
 
-		//CLAW VAR
-		long        lastx           = 0;        //Time since X last pressed
-		boolean     clw             = false;    //Claw toggle state
+		// CLAW VAR
+		long lastx = 0; // Time since X last pressed
+		boolean clw = false; // Claw toggle state
 
-		if (isStopRequested()) return;
+		if (isStopRequested())
+			return;
 
 		while (opModeIsActive()) {
+/*			robot.led.set(1);
+			sleep(300);
+			robot.led.set(0);*/
 
-			//Set the drive mode and controls
+			// Set the drive mode and controls
 			GamepadEx gp1 = new GamepadEx(gamepad1);
 
-			//DRIVE---------------------------------------------------------------------------------
-			//Set Differential drive
+			// DRIVE---------------------------------------------------------------------------------
+			// Set Differential drive
 			DifferentialDrive difDrive = new DifferentialDrive(robot.leftMotors, robot.rightMotors);
 
-			//Calculate values based off sticks
-			double drive = gp1.getLeftY()*DRIVE_SPEED;
-			double turn  = gp1.getRightX()*TURN_SPEED;
+			// Calculate values based off sticks
+			double drive = gp1.getLeftY() * DRIVE_SPEED;
+			double turn = gp1.getRightX() * TURN_SPEED;
 
-			//Apply values
+			// Apply values
 			difDrive.arcadeDrive(drive, turn);
 
-			//ARM-----------------------------------------------------------------------------------
-			//Set settings and such
+			// ARM-----------------------------------------------------------------------------------
+			// Set settings and such
 			robot.arm.set(ARM_SPEED);
 			robot.arm.setPositionCoefficient(ARM_COEFFICIENT);
 			robot.arm.setPositionTolerance(ARM_TOLERANCE);
-			//robot.arm.setDistancePerPulse(1);
+			// robot.arm.setDistancePerPulse(1);
 
-			//Increment arm pos based on triggers
+			// Increment arm pos based on triggers
 			if (gp1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) > 0) {
 				robot.arm.setTargetPosition((int) (robot.arm.getCurrentPosition() - ARM_INCREMENT));
 			} else if (gp1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0) {
@@ -104,51 +109,52 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 				robot.arm.setTargetPosition(robot.arm.getCurrentPosition());
 			}
 
-			//Set levels using D-PAD
+			// Set levels using D-PAD
 			if (gp1.getButton(GamepadKeys.Button.DPAD_DOWN)) {
-				//robot.arm.set(0.125);
-				robot.arm.setTargetPosition(0);
+				//robot.arm.set(0.2);
+				robot.arm.setTargetPosition((int) (0 / nr40d2));
 			} else if (gp1.getButton(GamepadKeys.Button.DPAD_RIGHT)) {
-//				robot.arm.set(0.13);
+				// robot.arm.set(0.13);
 				robot.arm.setTargetPosition((int) (65 / nr40d2));
 			} else if (gp1.getButton(GamepadKeys.Button.DPAD_UP)) {
-//				robot.arm.set(0.13);
+				// robot.arm.set(0.13);
 				robot.arm.setTargetPosition((int) (100 / nr40d2));
 			} else if (gp1.getButton(GamepadKeys.Button.DPAD_LEFT)) {
-//				robot.arm.set(0.13);
+				// robot.arm.set(0.13);
 				robot.arm.setTargetPosition((int) (140 / nr40d2));
 			}
 
-			if (robot.arm.getCurrentPosition() > 150/nr40d2) {
-				robot.arm.setTargetPosition((int) (148.9/nr40d2));
+			if (robot.arm.getCurrentPosition() > 170 / nr40d2) {
+				robot.arm.setTargetPosition((int) (169.8 / nr40d2));
 			}
 
-			//CLAW----------------------------------------------------------------------------------
-			//Toggle claw state if last button press not within 500ms
-			if (gp1.getButton(GamepadKeys.Button.X)  && System.currentTimeMillis() - lastx > 500) {
+			// CLAW----------------------------------------------------------------------------------
+			// Toggle claw state if last button press not within 500ms
+			if (gp1.getButton(GamepadKeys.Button.X) && System.currentTimeMillis() - lastx > 500) {
 				lastx = System.currentTimeMillis();
 				clw = !clw;
 			}
 
-			//Set open/close values when toggled
+			// Set open/close values when toggled
 			if (clw) {
 				robot.claw.set(CLAW_OPEN);
 			} else {
 				robot.claw.set(CLAW_CLOSE);
 			}
 
-			//DUCK----------------------------------------------------------------------------------
+			// DUCK----------------------------------------------------------------------------------
 			if (gp1.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
-				robot.duckSpin.set(0.8);
+				robot.duckSpin.set(DUCK_SPEED);
 			} else if (gp1.getButton(GamepadKeys.Button.LEFT_BUMPER)) {
-				robot.duckSpin.set(-0.8);
+				robot.duckSpin.set(-DUCK_SPEED);
 			} else {
 				robot.duckSpin.set(0);
 			}
 
-			//Misc Things---------------------------------------------------------------------------
+			// Misc
+			// Things---------------------------------------------------------------------------
 
-			//Get bot voltage
+			// Get bot voltage
 			double volt = Double.POSITIVE_INFINITY;
 			for (VoltageSensor sensor : hardwareMap.voltageSensor) {
 				double voltage = sensor.getVoltage();
@@ -157,24 +163,25 @@ public class FreightFrenzy_TeleOp extends LinearOpMode {
 				}
 			}
 
-			//Calculate Run-Time for some reason
+			// Calculate Run-Time for some reason
 			long seconds = round(time.time());
 			long t1 = seconds % 60;
 			long t2 = seconds / 60;
 			long t3 = t2 % 60;
 			t2 = t2 / 60;
 
+			// TELEMETRY--------------------------------------------------------------------------------------
+			FtcDashboard.getInstance().startCameraStream(robot.webcam, 0); // Broadcast webcam to FTCDash
 
-
-			//TELEMETRY--------------------------------------------------------------------------------------
-			FtcDashboard.getInstance().startCameraStream(robot.webcam, 0); //Broadcast webcam to FTCDash
-
-			telemetry.addData("!Status", "Run Time: " + twoPlaces.format(t2)+ ":" + twoPlaces.format(t3) + ":" + twoPlaces.format(t1));  //Run Time HH:MM:SS
+			telemetry.addData("!Status",
+					"Run Time: " + twoPlaces.format(t2) + ":" + twoPlaces.format(t3) + ":" + twoPlaces.format(t1)); // Run
+																													// Time
+																													// HH:MM:SS
 			telemetry.addData("Arm TICK", robot.arm.getCurrentPosition());
-			telemetry.addData("Arm DEG", robot.arm.getCurrentPosition() *nr40d2);
-			telemetry.addData("DRIVE", twoPoints.format(drive));            //Drive Value
-			telemetry.addData("TURN", twoPoints.format(turn));              //Turn Value
-			dTelemetry.addData("Voltage", twoPoints.format(volt));          //Voltage on FTC-Dash
+			telemetry.addData("Arm DEG", robot.arm.getCurrentPosition() * nr40d2);
+			telemetry.addData("DRIVE", twoPoints.format(drive)); // Drive Value
+			telemetry.addData("TURN", twoPoints.format(turn)); // Turn Value
+			dTelemetry.addData("Voltage", twoPoints.format(volt)); // Voltage on FTC-Dash
 			telemetry.update();
 
 			idle();
